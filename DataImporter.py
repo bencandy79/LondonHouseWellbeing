@@ -75,10 +75,6 @@ except:
 
 
 
-pd_import_csv.py
-
-Open with
-
 
 
 
