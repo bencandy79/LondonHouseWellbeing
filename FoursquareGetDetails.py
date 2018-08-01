@@ -17,7 +17,7 @@ def Get4SqCategoryDetails(category):
     client_secret = "GJGSIAZR4WXLYOHW4VP1JHTAMLH23EZXCWZDVPCZTYY2RQ4V"
     lat = 51.51098570912317
     long = -0.1042606316131014
-    distance = 100
+    distance = 20
     category_id = category
 
     df_Foursquare = DataFrame()
