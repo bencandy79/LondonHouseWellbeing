@@ -1,3 +1,5 @@
+
+
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jul 31 18:10:12 2018
@@ -35,6 +37,9 @@ except:
     pca = PCA(n_components=2)
     principalComponents = pca.fit_transform(df_crime_2017)
     df_crime_principal = pd.DataFrame(principalComponents, columns = ['principal component 1','principal component 2'])
+    
+    indicator2scaled = NMscaler.fit_transform(df_crime_principal)
+    indicator2 = pd.DataFrame(indicator2scaled)
         
 # import traffic fatality/injury data
 try:
