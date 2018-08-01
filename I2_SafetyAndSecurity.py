@@ -34,7 +34,7 @@ except:
     principalComponents = pca.fit_transform(df_crime_2017)
     df_crime_principal = pd.DataFrame(principalComponents, columns = ['principal component 1','principal component 2'])
         
-# import election data
+# import traffic fatality/injury data
 try:
     xlsx_traffic_fatalities = pd.ExcelFile(XLSX_TRAFFIC_FATALITIES)
     df_traffic_f = pd.read_excel(XLSX_TRAFFIC_FATALITIES, 'Ward 2014 only', skiprows=1)
