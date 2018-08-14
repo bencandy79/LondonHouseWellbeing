@@ -64,4 +64,4 @@ df_safety['Indicator'] = pd.Series(principalComponents[:,0],index=df_safety.inde
 normComponents = NMscaler.fit_transform(df_safety)
 df_safety_norm = df_safety
 df_safety_norm.loc[:,:] = 1-normComponents
-indicator_two = df_safety_norm.loc[:,'Indicator']
+indicator_two_safetysecurity = df_safety_norm.loc[:,'Indicator']
