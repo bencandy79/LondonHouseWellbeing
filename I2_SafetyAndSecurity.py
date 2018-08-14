@@ -63,5 +63,5 @@ principalComponents = pca.fit_transform(df_safety)
 df_safety['Indicator'] = pd.Series(principalComponents[:,0],index=df_safety.index)
 normComponents = NMscaler.fit_transform(df_safety)
 df_safety_norm = df_safety
-df_safety_norm.loc[:,:] = normComponents
+df_safety_norm.loc[:,:] = 1-normComponents
 indicator_two = df_safety_norm.loc[:,'Indicator']
