@@ -21,9 +21,9 @@ try:
 except:
     print('Cannot open data file - Ward Atlas Sheet 2') 
 
-emissions_columns = ['New Code','2011.4','2011.5','2011.6']
+emissions_columns = ['New Code','2011.4','2011.6']
 df_emissions = pd.DataFrame(df_ward_atlas5, columns = emissions_columns)
-df_emissions.rename(columns={'New Code':'Ward_Code','2011.4':'PM10','2011.5':'NOx','2011.6':'NO2'},inplace=True)
+df_emissions.rename(columns={'New Code':'Ward_Code','2011.4':'PM10','2011.6':'NO2'},inplace=True)
 df_emissions.set_index('Ward_Code',inplace=True)
 df_emissions = df_emissions.drop(['K04000001'])
 df_emissions = df_emissions.drop(['E92000001'])
@@ -31,7 +31,7 @@ df_emissions = df_emissions.drop(['E12000007'])
 
 emissions_scaled_values = STscaler.fit_transform(df_emissions)
 df_emissions.loc[:,:] = (emissions_scaled_values*-1)
-df_emissions['emission'] = (df_emissions['PM10'] + df_emissions['NOx'] + df_emissions['NO2'])/3
+df_emissions['emission'] = (df_emissions['PM10'] + df_emissions['NO2'])/2
 df_emissions = pd.DataFrame(df_emissions['emission'])
 
 greenspace_columns = ['New Code','2014.4']
