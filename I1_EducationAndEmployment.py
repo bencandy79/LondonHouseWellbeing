@@ -13,7 +13,7 @@ STscaler = StandardScaler()
 NMscaler = MinMaxScaler()
 
 XLSX_WARD_ATLAS = 'https://files.datapress.com/london/dataset/ward-profiles-and-atlas/2015-09-24T14:48:35/ward-atlas-data.xls'
-
+CSV_SCHOOLS = 'https://files.datapress.com/london/dataset/london-schools-atlas/2017-01-26T18:50:00/all_schools_xy_2016.csv'
 
 # import ward atlas sheet 2
 try:
