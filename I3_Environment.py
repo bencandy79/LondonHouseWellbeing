@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Aug 14 20:48:27 2018
-
 @author: ben.candy
-"""
 
+"""
 import pandas as pd
+import geopandas as gpd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
+from shapely.geometry import Point
+import matplotlib.pyplot as plt
 
 STscaler = StandardScaler()
 NMscaler = MinMaxScaler()
@@ -73,3 +75,32 @@ normComponents = NMscaler.fit_transform(df_environment)
 df_environment_norm = df_environment
 df_environment_norm.loc[:,:] = normComponents
 indicator_three_environment = df_environment_norm.loc[:,'Indicator']
+
+fp = 'H:/Shapes/London_Ward.shp'
+
+map_df = gpd.read_file(fp)
+print(map_df.head())
+
+merged = map_df.set_index('GSS_CODE').join(indicator_three_environment)
+merged.head()
+
+variable = 'Indicator'
+# set the range for the choropleth
+vmin, vmax = 0, 1
+# create figure and axes for Matplotlib
+fig, ax = plt.subplots(1, figsize=(10, 6))
+# create map
+merged.plot(column=variable, cmap='Blues', linewidth=0.8, ax=ax, edgecolor='0.8')
+# remove the axis
+ax.axis('off')
+# add a title
+ax.set_title('Environment Well-Being Score', fontdict={'fontsize': '25', 'fontweight' : '3'})
+# create an annotation for the data source
+ax.annotate('Source: London Datastore, 2014',xy=(0.1, .08),  xycoords='figure fraction', horizontalalignment='left', verticalalignment='top', fontsize=12, color='#555555')
+# Create colorbar as a legend
+sm = plt.cm.ScalarMappable(cmap='Blues', norm=plt.Normalize(vmin=vmin, vmax=vmax))
+# empty array for the data range
+sm._A = []
+# add the colorbar to the figure
+cbar = fig.colorbar(sm)
+fig.savefig('map_export.png', dpi=300)
