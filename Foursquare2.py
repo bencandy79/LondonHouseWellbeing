@@ -6,6 +6,7 @@ import requests
 
 df_Foursquare = pd.DataFrame()
 FrameList = []
+limit_reached = 0
 
 for i in range(1,50):
     for j in range(15,750,15):
@@ -16,12 +17,14 @@ for i in range(1,50):
         category_id = '4d4b7104d754a06370d81259' # cultural space
         distance = 500
         requested_keys = ["categories","id","location","name"]
-        url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=2&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
+        url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
         resp = requests.get(url)
         dataResp = resp.json()
         if dataResp["response"]['venues'] != []:
             data = DataFrame(dataResp["response"]['venues'])[requested_keys]
             df_FoursquareIteration = pd.DataFrame(data)
+            if len(df_FoursquareIteration) == 49:
+                limit_reached = limit_reached + 1
             df_FoursquareIteration["categories"] = df_FoursquareIteration["categories"].apply(lambda x: dict(x[0])['name'])
             df_FoursquareIteration["lat"] = df_FoursquareIteration["location"].apply(lambda x: dict(x)["lat"])
             df_FoursquareIteration["long"] = df_FoursquareIteration["location"].apply(lambda x: dict(x)["lng"])
@@ -29,6 +32,8 @@ for i in range(1,50):
             
 df_Foursquare = pd.concat(FrameList)
 df_Foursquare.drop_duplicates(subset=['id'],keep=False)
+if limit_reached > 0:
+    print(limit_reached)
 
 def point_in_poly(x,y,poly):
    # check if point is a vertex
