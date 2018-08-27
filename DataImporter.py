@@ -5,6 +5,12 @@ Created on Sat Aug 25 16:29:29 2018
 """
 import pandas as pd
 import numpy as np
+from pandas.io.json import json_normalize
+import time
+import requests
+import geopandas as gpd
+from shapely.geometry import Point, Polygon
+from pyproj import Proj, transform
 
 def importHousePrices():
     XLS_HOUSE_PRICE = 'https://data.london.gov.uk/download/average-house-prices/fb8116f5-06f8-42e0-aa6c-b0b1bd69cdba/land-registry-house-prices-ward.xls'
@@ -22,9 +28,9 @@ def importEmploymentRates():
         df_ward_atlas2 = pd.read_excel(XLSX_WARD_ATLAS, 'iadatasheet2', skiprows=2)   
     except:
         print('Cannot open data file - Ward Atlas Sheet 2') 
-    employment_columns = ['New Code','Economically active: % In employment']
+    employment_columns = ['New Code','Economically active: % In employment.1']
     df_employment = pd.DataFrame(df_ward_atlas2, columns = employment_columns)
-    df_employment.rename(columns={'New Code':'Ward_Code','Economically active: % In employment':'Employ_Rate'},inplace=True)
+    df_employment.rename(columns={'New Code':'Ward_Code','Economically active: % In employment.1':'Employ_Rate'},inplace=True)
     df_employment.to_csv('files/Employment.csv',index=False)
     return(df_employment)
     
@@ -41,7 +47,7 @@ def importGCSE():
     return(df_GCSE)
     
 def importSchools():
-    CSV_SCHOOLS = 'http://ea-edubase-api-prod.azurewebsites.net/edubase/edubasealldata20180825.csv'
+    CSV_SCHOOLS = 'http://ea-edubase-api-prod.azurewebsites.net/edubase/edubasealldata20180827.csv'
     try:
         iter_csv = pd.read_csv(CSV_SCHOOLS, iterator=True, chunksize=1000)
         df_schoolsall = pd.DataFrame()
@@ -50,9 +56,10 @@ def importSchools():
         print('Cannot open data file - SchoolsData')
     df_schoolslondonopen = df_schoolsall[(df_schoolsall['SchoolCapacity'] > 0) & (df_schoolsall['EstablishmentStatus (code)'] == 1)]
     df_schoolslondonopen['OfstedRating (name)'].replace('', np.nan, inplace=True)
-    df_schoolslondon = pd.DataFrame(df_schoolslondonopen.dropna(subset=['OfstedRating (name)'], inplace=True))
-    df_schoolslondon['Ofsted_Rating'] = df_schoolslondon['OfstedRating (name)']
-    ofsted_ratings = {'Ofsted_Rating':{'Outstanding':2,'Good':1,'Requires improvement':-1,'Serious Weaknesses':-2,'Special Measures':-2}}
+    df_schoolslondonopen.dropna(subset=['OfstedRating (name)'], inplace=True)
+    df_schoolslondon = pd.DataFrame(df_schoolslondonopen)
+    df_schoolslondon.rename(columns={'OfstedRating (name)':'Ofsted_Rating'}, inplace=True)
+    ofsted_ratings = {'Ofsted_Rating':{'Outstanding':2,'Good':1,'Requires improvement':-1,'Serious Weaknesses':-2,'Special Measures':-2,'Inadequate':-2}}
     df_schoolslondon.replace(ofsted_ratings,inplace=True)
     df_schoolslondon.to_csv('files/Schools.csv',index=False)
     return(df_schoolslondon)
@@ -88,7 +95,7 @@ def importEmissions():
     try:
         df_ward_atlas5 = pd.read_excel(XLSX_WARD_ATLAS, 'iadatasheet5', skiprows=2)   
     except:
-        print('Cannot open data file - Ward Atlas Sheet 2')
+        print('Cannot open data file - Ward Atlas Sheet 5')
     emissions_columns = ['New Code','2011.4','2011.6']
     df_emissions = pd.DataFrame(df_ward_atlas5, columns = emissions_columns)
     df_emissions.rename(columns={'New Code':'Ward_Code','2011.4':'PM10','2011.6':'NO2'},inplace=True)
@@ -100,7 +107,7 @@ def importGreenspace():
     try:
         df_ward_atlas5 = pd.read_excel(XLSX_WARD_ATLAS, 'iadatasheet5', skiprows=2)   
     except:
-        print('Cannot open data file - Ward Atlas Sheet 2')
+        print('Cannot open data file - Ward Atlas Sheet 5')
     greenspace_columns = ['New Code','2014.4']
     df_greenspace = pd.DataFrame(df_ward_atlas5, columns = greenspace_columns)
     df_greenspace.rename(columns={'New Code':'Ward_Code','2014.4':'Greenspace%'},inplace=True)
@@ -130,6 +137,40 @@ def importElection():
     df_turnout.to_csv('files/ElectionTurnout.csv', index=False)
     return(df_turnout)
 
+def importCulturalSpace():
+    df_Foursquare = pd.DataFrame()
+    FrameList = []
+    limit_reached = 0
+    for i in range(1,50):
+        for j in range(15,750,15):
+            client_id = "XO1QQIQ02JE0EKQXZ4HBOYPHW2DSWJH5EIBN2AOZG2NRZVPK"
+            client_secret = "GJGSIAZR4WXLYOHW4VP1JHTAMLH23EZXCWZDVPCZTYY2RQ4V"
+            lat = (51.2 + (i/100.0))
+            long = (-0.25 + (j/1000.0))
+            category_id = '4d4b7104d754a06370d81259' # cultural space
+            distance = 450
+            requested_keys = ["categories","id","location","name"]
+            url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
+            resp = requests.get(url)
+            dataResp = resp.json()
+            if dataResp["response"]['venues'] != []:
+                data = pd.DataFrame(dataResp["response"]['venues'])[requested_keys]
+                df_FoursquareIteration = pd.DataFrame(data)
+                if len(df_FoursquareIteration) == 49:
+                    limit_reached = limit_reached + 1
+                df_FoursquareIteration["categories"] = df_FoursquareIteration["categories"].apply(lambda x: dict(x[0])['name'])
+                df_FoursquareIteration["lat"] = df_FoursquareIteration["location"].apply(lambda x: dict(x)["lat"])
+                df_FoursquareIteration["long"] = df_FoursquareIteration["location"].apply(lambda x: dict(x)["lng"])
+                FrameList.append(df_FoursquareIteration)
+    df_Foursquare = pd.concat(FrameList)
+    df_Foursquare.drop_duplicates(subset=['id'],keep=False)
+    if limit_reached > 0:
+        print('Limit Reached')
+        print(limit_reached)
+    columns = ['name','categories','lat','long']
+    df_culture = pd.DataFrame(df_Foursquare, columns = columns)
+    df_culture.to_csv('files/CulturalVenues.csv', index=False, encoding='utf-8')
+      
 def importTransportAccess():
     CSV_TRANSPORT_ACCESS = 'https://files.datapress.com/london/dataset/public-transport-accessibility-levels/2018-02-20T14:44:30.58/Ward2014%20AvPTAI2015.csv'
     try:
@@ -140,6 +181,27 @@ def importTransportAccess():
     df_transport_access = pd.DataFrame(df_transport_access, columns = transport_access_columns)
     df_transport_access.to_csv('files/TransportAccess.csv', index=False)
     return(df_transport_access)
+    
+def importJourneyTimes():
+    XLS_JOURNEYTIMES = 'files/jts0501.xls'
+    CSV_LSOA_MAPPING = 'https://opendata.arcgis.com/datasets/07a6d14d4a0540769f0662f4d1450bae_0.csv'
+    try:
+        df_journeys = pd.read_excel(XLS_JOURNEYTIMES, 'JTS0501', skiprows=6)  
+    except:
+        print('Cannot open data file - JourneyTimes') 
+    try:
+        df_lsoa_ward = pd.read_csv(CSV_LSOA_MAPPING)
+    except:
+        print('Cannot open data file - LSOA to Ward Mapping')
+    journey_columns = ['LSOA_code','100EmpPTt','500EmpPTt','5000EmpPTt']
+    df_journeys = pd.DataFrame(df_journeys, columns = journey_columns)
+    df_journeys['JourneyTime'] = (df_journeys['100EmpPTt'] + df_journeys['500EmpPTt'] + df_journeys['5000EmpPTt'])/3.0
+    df_journeys = pd.merge(df_journeys, df_lsoa_ward, left_on='LSOA_code', right_on='LSOA11CD')
+    shapes = 'C:/Shapes/London_Ward.shp'
+    wards = gpd.read_file(shapes)
+    df_journeys = pd.merge(wards, df_journeys, left_on='GSS_CODE', right_on='WD15CD')
+    df_journeys.to_csv('files/JourneyTimes.csv', index=False)
+    
     
 def importPopulationDensity():
     CSV_POP_DENSITY='https://files.datapress.com/london/dataset/land-area-and-population-density-ward-and-borough/2018-03-05T10:54:05.31/housing-density-ward.csv'
@@ -168,3 +230,42 @@ def importLifeExpectancy():
     del df_life_ex['Male']
     df_life_ex.to_csv('files/LifeExpectancy.csv', index=False)
     return(df_life_ex)
+    
+def importChildObesity():
+    XLSX_CHILD_OBESITY = 'https://files.datapress.com/london/dataset/prevalence-childhood-obesity-borough/2015-09-21T14:31:19/MSOA_Ward_LA_Obesity.xlsx'
+    try:
+        df_childobesity = pd.read_excel(XLSX_CHILD_OBESITY, '2011-12_2013-14', skiprows=3)     
+    except:
+        print('Cannot open data file - Childhood Obesity by Ward')
+    df_childobesity.rename(columns={'Unnamed: 13':'Obese%'},inplace=True)
+    obesity_columns = ['Geog Level','Code','LA code','Obese%']
+    df_childobesity = pd.DataFrame(df_childobesity, columns = obesity_columns)
+    df_obesityborough = pd.DataFrame(df_childobesity[(df_childobesity['Geog Level'] == 'LA')])
+    df_obesityborough.rename(columns={'Obese%':'BoroughObese%'},inplace=True)
+    borough_columns = ['Code','BoroughObese%']
+    df_obesityborough = pd.DataFrame(df_obesityborough, columns = borough_columns)
+    df_childobesity = pd.DataFrame(df_childobesity[(df_childobesity['Geog Level'] == 'Ward')])
+    df_childobesity = pd.merge(df_childobesity, df_obesityborough, left_on='LA code', right_on='Code')
+    df_childobesity['Obese%'].replace('s', df_childobesity['BoroughObese%'], inplace=True)
+    ward_columns = ['Code_x', 'Obese%']
+    df_childobesity = pd.DataFrame(df_childobesity, columns = ward_columns)
+    df_childobesity.to_csv('files/ChildObesity.csv', index=False)
+    return(df_childobesity)
+    
+def importIllness():
+    XLSX_ILLNESS = 'https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/467775/File_8_ID_2015_Underlying_indicators.xlsx'
+    CSV_LSOA_MAPPING ='https://opendata.arcgis.com/datasets/07a6d14d4a0540769f0662f4d1450bae_0.csv'
+    try:
+        df_illness = pd.read_excel(XLSX_ILLNESS, 'ID 2015 Health Domain')     
+    except:
+        print('Cannot open data file - Childhood Obesity by Ward')
+    try:
+        df_lsoa_ward = pd.read_csv(CSV_LSOA_MAPPING)
+    except:
+        print('Cannot open data file - LSOA to Ward Mapping')
+    df_illness = pd.merge(df_illness, df_lsoa_ward, left_on='LSOA code (2011)', right_on='LSOA11CD')
+    shapes = 'C:/Shapes/London_Ward.shp'
+    wards = gpd.read_file(shapes)
+    df_illness = pd.merge(wards, df_illness, left_on='GSS_CODE', right_on='WD15CD')
+    df_illness.to_csv('files/Illness.csv', index=False)
+    return(df_illness)
