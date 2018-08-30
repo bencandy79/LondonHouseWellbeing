@@ -137,7 +137,7 @@ def importElection():
     df_turnout.to_csv('files/ElectionTurnout.csv', index=False)
     return(df_turnout)
 
-def importVenue():
+def importVenue(category, filename):
     df_Foursquare = pd.DataFrame()
     FrameList = []
     limit_reached = 0
@@ -152,7 +152,7 @@ def importVenue():
             elif category = 'restaurant':
                 category_id = '4d4b7105d754a06374d81259' # food
             elif category = 'bar':
-                category_id = '4d4b7105d754a06374d81259' # drink
+                category_id = '4d4b7105d754a06376d81259' # drink
             distance = 450
             requested_keys = ["categories","id","location","name"]
             url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
@@ -174,7 +174,7 @@ def importVenue():
         print(limit_reached)
     columns = ['name','categories','lat','long']
     df_culture = pd.DataFrame(df_Foursquare, columns = columns)
-    df_culture.to_csv('files/CulturalVenues.csv', index=False, encoding='utf-8')
+    df_culture.to_csv(filename, index=False, encoding='utf-8')
       
 def importTransportAccess():
     CSV_TRANSPORT_ACCESS = 'https://files.datapress.com/london/dataset/public-transport-accessibility-levels/2018-02-20T14:44:30.58/Ward2014%20AvPTAI2015.csv'
