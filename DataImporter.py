@@ -137,7 +137,7 @@ def importElection():
     df_turnout.to_csv('files/ElectionTurnout.csv', index=False)
     return(df_turnout)
 
-def importCulturalSpace():
+def importVenue():
     df_Foursquare = pd.DataFrame()
     FrameList = []
     limit_reached = 0
@@ -147,7 +147,12 @@ def importCulturalSpace():
             client_secret = "GJGSIAZR4WXLYOHW4VP1JHTAMLH23EZXCWZDVPCZTYY2RQ4V"
             lat = (51.2 + (i/100.0))
             long = (-0.25 + (j/1000.0))
-            category_id = '4d4b7104d754a06370d81259' # cultural space
+            if category = 'cultural':
+                category_id = '4d4b7104d754a06370d81259' # cultural space
+            elif category = 'restaurant':
+                category_id = '4d4b7105d754a06374d81259' # food
+            elif category = 'bar':
+                category_id = '4d4b7105d754a06374d81259' # drink
             distance = 450
             requested_keys = ["categories","id","location","name"]
             url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
