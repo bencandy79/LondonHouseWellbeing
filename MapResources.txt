@@ -1,6 +1,0 @@
-http://geopandas.org/index.html
-https://towardsdatascience.com/lets-make-a-map-using-geopandas-pandas-and-matplotlib-to-make-a-chloropleth-map-dddc31c1983d
-https://stackoverflow.com/questions/7861196/check-if-a-geopoint-with-latitude-and-longitude-is-within-a-shapefile
-http://geospatialpython.com/2011/08/point-in-polygon-2-on-line.html
-https://leafletjs.com/index.html
-https://data.tfl.gov.uk/tfl/syndication/feeds/stations.kml?app_id=e7abb042&app_key=d6f656416108c742cc50710a47c95615
