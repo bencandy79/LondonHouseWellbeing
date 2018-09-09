@@ -1,0 +1,590 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dept. of Computer Science and Information Systems
+% Birkbeck, University of London
+% Template for MSc dissertations
+%  
+% Adapted by Y. Prifti, ylli@dcs.bbk.ac.uk;
+% A. Provetti ale@dcs.bbk.ac.uk  
+% from v. 2.5  
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Version 2.x major modifications by:
+% Vel (vel@latextemplates.com)
+%
+% This template is based on a template by:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+% Template license:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+11pt, % The default document font size, options: 10pt, 11pt, 12pt
+%oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+english, % ngerman for German
+singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+%parskip, % Uncomment to add space between paragraphs
+%nohyperref, % Uncomment to not load the hyperref package
+headsepline, % Uncomment to get a line under the header
+%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+]{MastersDoctoralThesis} % The class file specifying the document structure
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+
+\usepackage{mathpazo} % Use the Palatino font by default
+
+\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+
+\addbibresource{example.bib} % The filename of the bibliography
+
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+\usepackage{color}
+\definecolor{editorGray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{editorOcher}{rgb}{1, 0.5, 0} % #FF7F00 -> rgb(239, 169, 0)
+\definecolor{editorGreen}{rgb}{0, 0.5, 0} % #007C00 -> rgb(0, 124, 0)
+\usepackage{upquote}
+\usepackage{listings}
+\lstdefinelanguage{JavaScript}{
+	morekeywords={break, case, catch, continue, debugger, default, delete,         do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+	morecomment=[s]{/*}{*/},
+	morecomment=[l]//,
+	morestring=[b]",
+	morestring=[b]'
+}
+\lstdefinelanguage{CSS}{
+	keywords={accelerator,azimuth,background,background-attachment,
+		background-color,background-image,background-position,
+		background-position-x,background-position-y,background-repeat,
+		behavior,border,border-bottom,border-bottom-color,
+		border-bottom-style,border-bottom-width,border-collapse,
+		border-color,border-left,border-left-color,border-left-style,
+		border-left-width,border-right,border-right-color,
+		border-right-style,border-right-width,border-spacing,
+		border-style,border-top,border-top-color,border-top-style,
+		border-top-width,border-width,bottom,caption-side,clear,
+		clip,color,content,counter-increment,counter-reset,cue,
+		cue-after,cue-before,cursor,direction,display,elevation,
+		empty-cells,filter,float,font,font-family,font-size,
+		font-size-adjust,font-stretch,font-style,font-variant,
+		font-weight,height,ime-mode,include-source,
+		layer-background-color,layer-background-image,layout-flow,
+		layout-grid,layout-grid-char,layout-grid-char-spacing,
+		layout-grid-line,layout-grid-mode,layout-grid-type,left,
+		letter-spacing,line-break,line-height,list-style,
+		list-style-image,list-style-position,list-style-type,margin,
+		margin-bottom,margin-left,margin-right,margin-top,
+		marker-offset,marks,max-height,max-width,min-height,
+		min-width,-moz-binding,-moz-border-radius,
+		-moz-border-radius-topleft,-moz-border-radius-topright,
+		-moz-border-radius-bottomright,-moz-border-radius-bottomleft,
+		-moz-border-top-colors,-moz-border-right-colors,
+		-moz-border-bottom-colors,-moz-border-left-colors,-moz-opacity,
+		-moz-outline,-moz-outline-color,-moz-outline-style,
+		-moz-outline-width,-moz-user-focus,-moz-user-input,
+		-moz-user-modify,-moz-user-select,orphans,outline,
+		outline-color,outline-style,outline-width,overflow,
+		overflow-X,overflow-Y,padding,padding-bottom,padding-left,
+		padding-right,padding-top,page,page-break-after,
+		page-break-before,page-break-inside,pause,pause-after,
+		pause-before,pitch,pitch-range,play-during,position,quotes,
+		-replace,richness,right,ruby-align,ruby-overhang,
+		ruby-position,-set-link-source,size,speak,speak-header,
+		speak-numeral,speak-punctuation,speech-rate,stress,
+		scrollbar-arrow-color,scrollbar-base-color,
+		scrollbar-dark-shadow-color,scrollbar-face-color,
+		scrollbar-highlight-color,scrollbar-shadow-color,
+		scrollbar-3d-light-color,scrollbar-track-color,table-layout,
+		text-align,text-align-last,text-decoration,text-indent,
+		text-justify,text-overflow,text-shadow,text-transform,
+		text-autospace,text-kashida-space,text-underline-position,top,
+		unicode-bidi,-use-link-source,vertical-align,visibility,
+		voice-family,volume,white-space,widows,width,word-break,
+		word-spacing,word-wrap,writing-mode,z-index,zoom},  
+	sensitive=true,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]',
+	morestring=[b]",
+	alsoletter={:},
+	alsodigit={-}
+}
+\lstdefinelanguage{HTML5}{
+	language=html,
+	sensitive=true, 
+	alsoletter={<>=-},
+	otherkeywords={
+		% HTML tags
+		<, </, >,
+		</a, <a, </a>,
+		</abbr, <abbr, </abbr>,
+		</address, <address, </address>,
+		</area, <area, </area>,
+		</area, <area, </area>,
+		</article, <article, </article>,
+		</aside, <aside, </aside>,
+		</audio, <audio, </audio>,
+		</audio, <audio, </audio>,
+		</b, <b, </b>,
+		</base, <base, </base>,
+		</bdi, <bdi, </bdi>,
+		</bdo, <bdo, </bdo>,
+		</blockquote, <blockquote, </blockquote>,
+		</body, <body, </body>,
+		</br, <br, </br>,
+		</button, <button, </button>,
+		</canvas, <canvas, </canvas>,
+		</caption, <caption, </caption>,
+		</cite, <cite, </cite>,
+		</code, <code, </code>,
+		</col, <col, </col>,
+		</colgroup, <colgroup, </colgroup>,
+		</data, <data, </data>,
+		</datalist, <datalist, </datalist>,
+		</dd, <dd, </dd>,
+		</del, <del, </del>,
+		</details, <details, </details>,
+		</dfn, <dfn, </dfn>,
+		</div, <div, </div>,
+		</dl, <dl, </dl>,
+		</dt, <dt, </dt>,
+		</em, <em, </em>,
+		</embed, <embed, </embed>,
+		</fieldset, <fieldset, </fieldset>,
+		</figcaption, <figcaption, </figcaption>,
+		</figure, <figure, </figure>,
+		</footer, <footer, </footer>,
+		</form, <form, </form>,
+		</h1, <h1, </h1>,
+		</h2, <h2, </h2>,
+		</h3, <h3, </h3>,
+		</h4, <h4, </h4>,
+		</h5, <h5, </h5>,
+		</h6, <h6, </h6>,
+		</head, <head, </head>,
+		</header, <header, </header>,
+		</hr, <hr, </hr>,
+		</html, <html, </html>,
+		</i, <i, </i>,
+		</iframe, <iframe, </iframe>,
+		</img, <img, </img>,
+		</input, <input, </input>,
+		</ins, <ins, </ins>,
+		</kbd, <kbd, </kbd>,
+		</keygen, <keygen, </keygen>,
+		</label, <label, </label>,
+		</legend, <legend, </legend>,
+		</li, <li, </li>,
+		</link, <link, </link>,
+		</main, <main, </main>,
+		</map, <map, </map>,
+		</mark, <mark, </mark>,
+		</math, <math, </math>,
+		</menu, <menu, </menu>,
+		</menuitem, <menuitem, </menuitem>,
+		</meta, <meta, </meta>,
+		</meter, <meter, </meter>,
+		</nav, <nav, </nav>,
+		</noscript, <noscript, </noscript>,
+		</object, <object, </object>,
+		</ol, <ol, </ol>,
+		</optgroup, <optgroup, </optgroup>,
+		</option, <option, </option>,
+		</output, <output, </output>,
+		</p, <p, </p>,
+		</param, <param, </param>,
+		</pre, <pre, </pre>,
+		</progress, <progress, </progress>,
+		</q, <q, </q>,
+		</rp, <rp, </rp>,
+		</rt, <rt, </rt>,
+		</ruby, <ruby, </ruby>,
+		</s, <s, </s>,
+		</samp, <samp, </samp>,
+		</script, <script, </script>,
+		</section, <section, </section>,
+		</select, <select, </select>,
+		</small, <small, </small>,
+		</source, <source, </source>,
+		</span, <span, </span>,
+		</strong, <strong, </strong>,
+		</style, <style, </style>,
+		</summary, <summary, </summary>,
+		</sup, <sup, </sup>,
+		</svg, <svg, </svg>,
+		</table, <table, </table>,
+		</tbody, <tbody, </tbody>,
+		</td, <td, </td>,
+		</template, <template, </template>,
+		</textarea, <textarea, </textarea>,
+		</tfoot, <tfoot, </tfoot>,
+		</th, <th, </th>,
+		</thead, <thead, </thead>,
+		</time, <time, </time>,
+		</title, <title, </title>,
+		</tr, <tr, </tr>,
+		</track, <track, </track>,
+		</u, <u, </u>,
+		</ul, <ul, </ul>,
+		</var, <var, </var>,
+		</video, <video, </video>,
+		</wbr, <wbr, </wbr>,
+		/>, <!
+	},  
+	ndkeywords={
+		% General
+		=,
+		% HTML attributes
+		accept=, accept-charset=, accesskey=, action=, align=, alt=, async=, autocomplete=, autofocus=, autoplay=, autosave=, bgcolor=, border=, buffered=, challenge=, charset=, checked=, cite=, class=, code=, codebase=, color=, cols=, colspan=, content=, contenteditable=, contextmenu=, controls=, coords=, data=, datetime=, default=, defer=, dir=, dirname=, disabled=, download=, draggable=, dropzone=, enctype=, for=, form=, formaction=, headers=, height=, hidden=, high=, href=, hreflang=, http-equiv=, icon=, id=, ismap=, itemprop=, keytype=, kind=, label=, lang=, language=, list=, loop=, low=, manifest=, max=, maxlength=, media=, method=, min=, multiple=, name=, novalidate=, open=, optimum=, pattern=, ping=, placeholder=, poster=, preload=, pubdate=, radiogroup=, readonly=, rel=, required=, reversed=, rows=, rowspan=, sandbox=, scope=, scoped=, seamless=, selected=, shape=, size=, sizes=, span=, spellcheck=, src=, srcdoc=, srclang=, start=, step=, style=, summary=, tabindex=, target=, title=, type=, usemap=, value=, width=, wrap=,
+		% CSS properties
+		accelerator:,azimuth:,background:,background-attachment:,
+		background-color:,background-image:,background-position:,
+		background-position-x:,background-position-y:,background-repeat:,
+		behavior:,border:,border-bottom:,border-bottom-color:,
+		border-bottom-style:,border-bottom-width:,border-collapse:,
+		border-color:,border-left:,border-left-color:,border-left-style:,
+		border-left-width:,border-right:,border-right-color:,
+		border-right-style:,border-right-width:,border-spacing:,
+		border-style:,border-top:,border-top-color:,border-top-style:,
+		border-top-width:,border-width:,bottom:,caption-side:,clear:,
+		clip:,color:,content:,counter-increment:,counter-reset:,cue:,
+		cue-after:,cue-before:,cursor:,direction:,display:,elevation:,
+		empty-cells:,filter:,float:,font:,font-family:,font-size:,
+		font-size-adjust:,font-stretch:,font-style:,font-variant:,
+		font-weight:,height:,ime-mode:,include-source:,
+		layer-background-color:,layer-background-image:,layout-flow:,
+		layout-grid:,layout-grid-char:,layout-grid-char-spacing:,
+		layout-grid-line:,layout-grid-mode:,layout-grid-type:,left:,
+		letter-spacing:,line-break:,line-height:,list-style:,
+		list-style-image:,list-style-position:,list-style-type:,margin:,
+		margin-bottom:,margin-left:,margin-right:,margin-top:,
+		marker-offset:,marks:,max-height:,max-width:,min-height:,
+		min-width:,transition-duration:,transition-property:,
+		transition-timing-function:,transform:,
+		-moz-transform:,-moz-binding:,-moz-border-radius:,
+		-moz-border-radius-topleft:,-moz-border-radius-topright:,
+		-moz-border-radius-bottomright:,-moz-border-radius-bottomleft:,
+		-moz-border-top-colors:,-moz-border-right-colors:,
+		-moz-border-bottom-colors:,-moz-border-left-colors:,-moz-opacity:,
+		-moz-outline:,-moz-outline-color:,-moz-outline-style:,
+		-moz-outline-width:,-moz-user-focus:,-moz-user-input:,
+		-moz-user-modify:,-moz-user-select:,orphans:,outline:,
+		outline-color:,outline-style:,outline-width:,overflow:,
+		overflow-X:,overflow-Y:,padding:,padding-bottom:,padding-left:,
+		padding-right:,padding-top:,page:,page-break-after:,
+		page-break-before:,page-break-inside:,pause:,pause-after:,
+		pause-before:,pitch:,pitch-range:,play-during:,position:,quotes:,
+		-replace:,richness:,right:,ruby-align:,ruby-overhang:,
+		ruby-position:,-set-link-source:,size:,speak:,speak-header:,
+		speak-numeral:,speak-punctuation:,speech-rate:,stress:,
+		scrollbar-arrow-color:,scrollbar-base-color:,
+		scrollbar-dark-shadow-color:,scrollbar-face-color:,
+		scrollbar-highlight-color:,scrollbar-shadow-color:,
+		scrollbar-3d-light-color:,scrollbar-track-color:,table-layout:,
+		text-align:,text-align-last:,text-decoration:,text-indent:,
+		text-justify:,text-overflow:,text-shadow:,text-transform:,
+		text-autospace:,text-kashida-space:,text-underline-position:,top:,
+		unicode-bidi:,-use-link-source:,vertical-align:,visibility:,
+		voice-family:,volume:,white-space:,widows:,width:,word-break:,
+		word-spacing:,word-wrap:,writing-mode:,z-index:,zoom:
+	},  
+	morecomment=[s]{<!--}{-->},
+	tag=[s]
+}
+
+\lstset{%
+	% Basic design
+	backgroundcolor=\color{editorGray},
+	basicstyle={\small\ttfamily},   
+	frame=l,
+	% Line numbers
+	xleftmargin={0.75cm},
+	numbers=left,
+	stepnumber=1,
+	firstnumber=1,
+	numberfirstline=true,
+	% Code design   
+	keywordstyle=\color{blue}\bfseries,
+	commentstyle=\color{darkgray}\ttfamily,
+	ndkeywordstyle=\color{editorGreen}\bfseries,
+	stringstyle=\color{editorOcher},
+	% Code
+	language=HTML5,
+	alsodigit={.:;},
+	tabsize=2,
+	showtabs=false,
+	showspaces=false,
+	showstringspaces=false,
+	extendedchars=true,
+	breaklines=true,        
+}
+
+\lstdefinestyle{sharpc}{language=[Sharp]C, frame=lr, rulecolor=\color{blue!80!black}}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	MARGIN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\geometry{
+	paper=a4paper, % Change to letterpaper for US letter
+	inner=2.5cm, % Inner margin
+	outer=3.8cm, % Outer margin
+	bindingoffset=.5cm, % Binding offset
+	top=1.5cm, % Top margin
+	bottom=1.5cm, % Bottom margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%----------------------------------------------------------------------------------------
+
+
+\thesistitle{ Mapping London House Prices through Well-being} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
+
+\supervisor{Dr. Alessandro \textsc{Provetti}} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
+
+\examiner{} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
+
+\degree{Master of Science} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
+
+\author{Ben \textsc{Candy}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
+
+\addresses{} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
+
+\subject{Data Science} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
+
+\keywords{} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+
+\university{\href{http://www.bbk.ac.uk}{Birkbeck, University of London}} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
+
+\department{\href{http://www.dcs.bbk.ac.uk}{Department of Computer Science and Information Systems}} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
+
+\group{} % Your research group's name and URL, this is used in the title page, print it elsewhere with \groupname
+
+
+\faculty{\href{http://www.bbk.ac.uk/business/}{School of Business, Economics and Informatics}} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
+
+
+\AtBeginDocument{
+	\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+	\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+	\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+}
+
+\begin{document}
+	
+	\frontmatter % Use Roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+	
+	\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+	
+	%----------------------------------------------------------------------------------------
+	%	TITLE PAGE
+	%----------------------------------------------------------------------------------------
+	
+	\begin{titlepage}
+		\begin{center}
+			
+			\vspace*{.06\textheight}
+			{\scshape\LARGE \univname\par}\vspace{1.5cm} % University name
+			\textsc{\Large Master Project Report}\\[0.5cm] % Thesis type
+			
+			\HRule \\[0.4cm] % Horizontal line
+			{\huge \bfseries \ttitle\par}\vspace{0.4cm} % Thesis title
+			\HRule \\[1.5cm] % Horizontal line
+			
+			\begin{minipage}[t]{0.4\textwidth}
+				\begin{flushleft} \large
+					\emph{Author:}\\
+					\href{https://uk.linkedin.com/in/ylliprifti}{\authorname} % Author name - remove the \href bracket to remove the link
+				\end{flushleft}
+			\end{minipage}
+			\begin{minipage}[t]{0.4\textwidth}
+				\begin{flushright} \large
+					\emph{Supervisor:} \\
+					\href{https://www.dcs.bbk.ac.uk/about-us/people/academic-staff/alessandro/}{\supname} % Supervisor name - remove the \href bracket to remove the link  
+				\end{flushright}
+			\end{minipage}\\[3cm]
+			
+			\includegraphics[scale=1.5]{figures/Birkbeck-Logo-Colour} % University/department logo - uncomment to place it
+			
+			\vfill
+			
+			\large \textit{A project report submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
+			\textit{in the}\\[0.4cm]
+			\deptname\\[2cm] % Research group name and department name
+			
+			\vfill
+			
+			{\large \today}\\[4cm] % Date
+			
+			
+			\vfill
+		\end{center}
+	\end{titlepage}
+
+
+%----------------------------------------------------------------------------------------
+%	DECLARATION PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{declaration}
+\addchaptertocentry{\authorshipname} % Add the declaration to the table of contents
+\noindent I, \authorname, confirm that:
+
+\begin{itemize} 
+\item This report is substantially the result of my own work, expressed in my own words, except where explicitly indicated in the text. 
+\item I give my permission for it to be submitted to the JISC Plagiarism Detection Service. 
+\item 
+\item The report may be freely copied and distributed provided the source is explicitly acknowledged.\\
+\end{itemize}
+ 
+\noindent Signed:\\
+\rule[0.5em]{25em}{0.5pt} % This prints a line for the signature
+ 
+\noindent Date:\\
+\rule[0.5em]{25em}{0.5pt} % This prints a line to write the date
+\end{declaration}
+
+\cleardoublepage
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+\vspace*{0.2\textheight}
+
+\noindent\enquote{\itshape }\bigbreak
+
+\hfill 
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+\addchaptertocentry{\abstractname} % Add the abstract to the table of contents
+The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+\begin{acknowledgements}
+\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+I would like to thank my project supervisor Professor Alessandro Provetti for his support and guidance throughout this project.\ldots
+\end{acknowledgements}
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the main table of contents
+
+\listoffigures % Prints the list of figures
+
+\listoftables % Prints the list of tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+
+\begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
+
+\textbf{LAH} & \textbf{L}ist \textbf{A}bbreviations \textbf{H}ere\\
+\textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
+
+\end{abbreviations}
+
+%----------------------------------------------------------------------------------------
+%	PHYSICAL CONSTANTS/OTHER DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\begin{constants}{lr@{${}={}$}l} % The list of physical constants is a three column table
+
+% The \SI{}{} command is provided by the siunitx package, see its documentation for instructions on how to use it
+
+Speed of Light & $c_{0}$ & \SI{2.99792458e8}{\meter\per\second} (exact)\\
+%Constant Name & $Symbol$ & $Constant Value$ with units\\
+
+\end{constants}
+
+%----------------------------------------------------------------------------------------
+%	SYMBOLS
+%----------------------------------------------------------------------------------------
+
+\begin{symbols}{lll} % Include a list of Symbols (a three column table)
+
+$a$ & distance & \si{\meter} \\
+$P$ & power & \si{\watt} (\si{\joule\per\second}) \\
+%Symbol & Name & Unit \\
+
+\addlinespace % Gap to separate the Roman symbols from the Greek
+
+$\omega$ & angular frequency & \si{\radian} \\
+
+\end{symbols}
+
+%----------------------------------------------------------------------------------------
+%	DEDICATION
+%----------------------------------------------------------------------------------------
+
+\dedicatory{For/Dedicated to/To my\ldots} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
+\include{Chapters/Chapter3}
+\include{Chapters/Chapter4} 
+\include{Chapters/Chapter5} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+\include{Appendices/AppendixA}
+%\include{Appendices/AppendixB}
+%\include{Appendices/AppendixC}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\printbibliography[heading=bibintoc]
+
+%----------------------------------------------------------------------------------------
+
+\end{document}  

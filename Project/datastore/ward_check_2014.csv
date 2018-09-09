@@ -1,0 +1,60 @@
+NAME,GSS_CODE,LB_GSS_CD,BOROUGH,Translation,,Ward_Code,Names,Borough
+Brownswood,E05009367,E09000012,Hackney,E05000231,,E05000231,Brownswood,Hackney
+Cazenove,E05009368,E09000012,Hackney,E05000232,,E05000232,Cazenove,Hackney
+Clissold,E05009369,E09000012,Hackney,E05000234,,E05000233,Chatham,Hackney
+Dalston,E05009370,E09000012,Hackney,E05000235,,E05000234,Clissold,Hackney
+De Beauvoir,E05009371,E09000012,Hackney,E05000236,,E05000235,Dalston,Hackney
+Hackney Central,E05009372,E09000012,Hackney,E05000237,,E05000236,De Beauvoir,Hackney
+Hackney Downs,E05009373,E09000012,Hackney,E05000238,,E05000237,Hackney Central,Hackney
+Hackney Wick,E05009374,E09000012,Hackney,E05000249,,E05000238,Hackney Downs,Hackney
+Haggerston,E05009375,E09000012,Hackney,E05000239,,E05000239,Haggerston,Hackney
+Homerton,E05009376,E09000012,Hackney,E05000233,,E05000240,Hoxton,Hackney
+Hoxton East & Shoreditch,E05009377,E09000012,Hackney,E05000239,,E05000241,King's Park,Hackney
+Hoxton West,E05009378,E09000012,Hackney,E05000236,,E05000242,Leabridge,Hackney
+King's Park,E05009379,E09000012,Hackney,E05000241,,E05000243,Lordship,Hackney
+Lea Bridge,E05009380,E09000012,Hackney,E05000242,,E05000244,New River,Hackney
+London Fields,E05009381,E09000012,Hackney,E05000245,,E05000245,Queensbridge,Hackney
+Shacklewell,E05009382,E09000012,Hackney,E05000235,,E05000246,Springfield,Hackney
+Springfield,E05009383,E09000012,Hackney,E05000246,,E05000247,Stoke Newington Central,Hackney
+Stamford Hill West,E05009384,E09000012,Hackney,E05000243,,E05000248,Victoria,Hackney
+Stoke Newington,E05009385,E09000012,Hackney,E05000247,,E05000249,Wick,Hackney
+Victoria,E05009386,E09000012,Hackney,E05000248,,,,
+Woodberry Down,E05009387,E09000012,Hackney,E05000244,,,,
+Abingdon,E05009388,E09000020,Kensington and Chelsea,E05000382,,E05000382,Abingdon,Kensington and Chelsea
+Brompton & Hans Town,E05009389,E09000020,Kensington and Chelsea,E05000383,,E05000383,Brompton,Kensington and Chelsea
+Campden,E05009390,E09000020,Kensington and Chelsea,E05000384,,E05000384,Campden,Kensington and Chelsea
+Chelsea Riverside,E05009391,E09000020,Kensington and Chelsea,E05000387,,E05000385,Colville,Kensington and Chelsea
+Colville,E05009392,E09000020,Kensington and Chelsea,E05000385,,E05000386,Courtfield,Kensington and Chelsea
+Courtfield,E05009393,E09000020,Kensington and Chelsea,E05000386,,E05000387,Cremorne,Kensington and Chelsea
+Dalgarno,E05009394,E09000020,Kensington and Chelsea,E05000389,,E05000388,Earl's Court,Kensington and Chelsea
+Earl's Court,E05009395,E09000020,Kensington and Chelsea,E05000388,,E05000389,Golborne,Kensington and Chelsea
+Golborne,E05009396,E09000020,Kensington and Chelsea,E05000389,,E05000390,Hans Town,Kensington and Chelsea
+Holland,E05009397,E09000020,Kensington and Chelsea,E05000391,,E05000391,Holland,Kensington and Chelsea
+Norland,E05009398,E09000020,Kensington and Chelsea,E05000392,,E05000392,Norland,Kensington and Chelsea
+Notting Dale,E05009399,E09000020,Kensington and Chelsea,E05000393,,E05000393,Notting Barns,Kensington and Chelsea
+Pembridge,E05009400,E09000020,Kensington and Chelsea,E05000394,,E05000394,Pembridge,Kensington and Chelsea
+Queen's Gate,E05009401,E09000020,Kensington and Chelsea,E05000395,,E05000395,Queen's Gate,Kensington and Chelsea
+Redcliffe,E05009402,E09000020,Kensington and Chelsea,E05000396,,E05000396,Redcliffe,Kensington and Chelsea
+Royal Hospital,E05009403,E09000020,Kensington and Chelsea,E05000397,,E05000397,Royal Hospital,Kensington and Chelsea
+St. Helen's,E05009404,E09000020,Kensington and Chelsea,E05000398,,E05000398,St. Charles,Kensington and Chelsea
+Stanley,E05009405,E09000020,Kensington and Chelsea,E05000399,,E05000399,Stanley,Kensington and Chelsea
+Bethnal Green,E05009317,E09000030,Tower Hamlets,,,E05000573,Bethnal Green North,Tower Hamlets
+Blackwall & Cubitt Town,E05009318,E09000030,Tower Hamlets,,,E05000574,Bethnal Green South,Tower Hamlets
+Bow East,E05009319,E09000030,Tower Hamlets,,,E05000575,Blackwall and Cubitt Town,Tower Hamlets
+Bow West,E05009320,E09000030,Tower Hamlets,,,E05000576,Bow East,Tower Hamlets
+Bromley North,E05009321,E09000030,Tower Hamlets,,,E05000577,Bow West,Tower Hamlets
+Bromley South,E05009322,E09000030,Tower Hamlets,,,E05000578,Bromley-by-Bow,Tower Hamlets
+Canary Wharf,E05009323,E09000030,Tower Hamlets,,,E05000579,East India and Lansbury,Tower Hamlets
+Island Gardens,E05009324,E09000030,Tower Hamlets,,,E05000580,Limehouse,Tower Hamlets
+Lansbury,E05009325,E09000030,Tower Hamlets,,,E05000581,Mile End and Globe Town,Tower Hamlets
+Limehouse,E05009326,E09000030,Tower Hamlets,,,E05000582,Mile End East,Tower Hamlets
+Mile End,E05009327,E09000030,Tower Hamlets,,,E05000583,Millwall,Tower Hamlets
+Poplar,E05009328,E09000030,Tower Hamlets,,,E05000584,St. Dunstan's and Stepney Green,Tower Hamlets
+Shadwell,E05009332,E09000030,Tower Hamlets,,,E05000585,St. Katherine's and Wapping,Tower Hamlets
+Spitalfields & Banglatown,E05009333,E09000030,Tower Hamlets,,,E05000586,Shadwell,Tower Hamlets
+St. Dunstan's,E05009329,E09000030,Tower Hamlets,,,E05000587,Spitalfields and Banglatown,Tower Hamlets
+St. Katharine's & Wapping,E05009330,E09000030,Tower Hamlets,,,E05000588,Weavers,Tower Hamlets
+St. Peter's,E05009331,E09000030,Tower Hamlets,,,E05000589,Whitechapel,Tower Hamlets
+Stepney Green,E05009334,E09000030,Tower Hamlets,,,,,
+Weavers,E05009335,E09000030,Tower Hamlets,,,,,
+Whitechapel,E05009336,E09000030,Tower Hamlets,,,,,
