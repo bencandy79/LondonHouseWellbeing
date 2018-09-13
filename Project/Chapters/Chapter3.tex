@@ -10,7 +10,7 @@
 
 \section{Flat files}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies lacinia euismod. Nam tempus risus in dolor rhoncus in interdum enim tincidunt. Donec vel nunc neque. In condimentum ullamcorper quam non consequat. Fusce sagittis tempor feugiat. Fusce magna erat, molestie eu convallis ut, tempus sed arcu. Quisque molestie, ante a tincidunt ullamcorper, sapien enim dignissim lacus, in semper nibh erat lobortis purus. Integer dapibus ligula ac risus convallis pellentesque.
+The majority of data sets are either csv or Excel files which are accessed directly via a url by the data importer application. These sources are primarily from the websites of public bodies. The data importer application makes use of the pandas module within Python to support the importing and cleaning process within a series of dataframe objects.
 
 %-----------------------------------
 %	SUBSECTION 1
@@ -57,6 +57,21 @@ The places API from Google Maps was queried and code written to extract venue da
 
 %----------------------------------------------------------------------------------------
 %	SECTION 3
+%----------------------------------------------------------------------------------------
+
+\section{Shape Files}
+
+For choropleth mapping, shape files are needed to visualise the polygon shapes which define adminstrative or political boundaries. Shape files usually consist of properties of the shape such as name and size along with a geometry feature which defines the boundaries of a given shape via the coordinates of their vertices. For this project, the relevant shapefile is key to creating the final interactive map and will also be use to visualise the data to support the model building process.  
+
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
+\subsection{London Ward shapefile}
+
+The key shapefile for the project is taken from the London datastore and provides the polygon geometry of the London wards. This is a .shp file where the point coordinates which make up the polygon for each ward are in the Ordnance Survey grid reference cooridnate reference system. With point geometries more often listed in latitude and longditude, there will need to be some reprojection of coordinates to enable certain datasets to match with the shapefile.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 4
 %----------------------------------------------------------------------------------------
 
 \section{Data availability}

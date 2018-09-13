@@ -39,6 +39,14 @@ Because of the rate limits, running the algorithm for such a large area could on
 
 \section{Well-being domain scores}
 
+The motivation for creating composite domain scores 6 different measures of well-being was two-fold. Firstly creating a score for each domain over a pre-defined scale would allow users of the front-end interactive map compare scores accross wards and give those scores some contextual meaning and significance. With 6 domains rather than the original 18 datasets, the amount of information presented to the user would not be too large to prevent a non-technical audience from interpreting the information on the map. The second reason for creating the domain indicators was to help to try and create an interpretable model rather than one requiring significant dimension reduction. Whilst some less interpretable models will be tested to validate the quality of the quintile classification model, ideally the project and the user front end should allow us to draw some conclusions about any link between well-being and median house prices in London.
+
+For each domain three appropriate datasets were chosen and then reduced to give a single score for each ward. The 3 datasets for each domain were standardised using a function in Python and those which related to a negative indicator such as emissions or crime were mutliplied by a value of -1. Using this technique of standardisation gave equal weighting to each of the three indicators. Because of the equal weighting given to each indicator, these can be seen as substitutable within the context of the domain which is a important factor in the choice of technique used to reduce the indicators to a score. With indicators that can be assumed to be substitutable suitable techniques would include Principal Component Analysis (PCA) and an arithmetic mean
+?INSERT REFERENCE TO PAPER BY ITALIAN ACADEMICS?
+For the 6 domains, a mixture of the two techniques have been used. For those domains where the 3 indicators have a relatively high correlation ?ABOVE WHAT? the first Principal Component has been used to try and extract the largest amount of variance within the three indicators. Where the indicators for a domain have low levels of correlation for at least one of the three datasets, the arithmetic mean has been used. This approach gives us three domains which use PCA and three which use the mean.
+?INSERT COV MATRICES AND TECHNIQUES FOR EACH DOMAIN?
+This approach tries to maximise the information contained in all of the datasets.
+To create an interpretable and comparable score for each domain the resulting single scores have been normalised and then rescaled to be between 0 and 100, this is the score that is presented in the user front end.
 
 
 %----------------------------------------------------------------------------------------
@@ -51,16 +59,39 @@ London is known for having very high real estate values but we can see from the 
 
 \includegraphics[scale=0.4]{figures/HPMedian} % Choropleth of median house prices
 
+The choropleth map would suggest a high number of wards fall at the lower end of the range of median house prices with a small number with significantly high prices. From the pairwise plot below, the shape of the histogram of median house prices by ward would suggest that a power law may best describe the distribution.
+
+? FIT POWERLAW TO MEDIAN HOUSE PRICES ?
+
+For the domain scores, the histograms show most of the six as being at least close to a normal distribution. This is less clear in the case of the Safety and Security and Community Vitality and Participation domains with Safety and Security showing a large number of high values and Community Vitality and Participation showing many low scores. This can be attributed to a small number of wards where crime is high and that wards in central London have much greater access to both cultural and social spaces as indicated on the maps below. In both cases, a power law may best describe these distributions.
 
 \includegraphics[scale=0.3]{figures/pairplot} % Pair-wise plot with median prices
 
-\includegraphics[scale=1]{figures/regression_results} % Pair-wise plot with median price
+This is less clear in the case of the Safety and Security and Community Vitality and Participation domains with Safety and Security showing a large number of high values and Community Vitality and Participation showing many low scores. This can be attributed to a small number of wards where crime is high and that wards in central London have much greater access to both cultural and social spaces as indicated on the maps below. In both cases, a power law may best describe these distributions.
 
-Looking at the median house prices on the pair-wise plot, the distribution looks as though it may be governed by a power law. On this basis, to try and improve the regression model I re-ran the regression model having log transformed the data. This lead to a signifcant increase in the Rsq score for the model, with an increase of around 0.45 to around 0.65 accounting for an additional 20 percent of the variation in the data. This was a far more effective strategy than using polynomial terms or dimension reduction and accounted for the best regression model. The equation given by this model was:
+Correlations
 
-[insert model equation]
+?INSERT MAPS OF EACH DOMAIN?
 
-When the predictions were given the inverse transformation and compared with the actual values, the majority of wards showed that this model had good predictive capability although there were a handful of wards where the prediction had a signifcant error margin.  
+To begin the task of trying to model the median house prices from the well-being indicators, a simple multiple linear regression model was used with all six domains as predictors. The results show that this model explains less than half the variance with an R sq score of 0.39. There is enough to suggest that some form of linear model may provide a reasonable model of this problem.
+To validate the model K-fold cross validation was used with k=7 with accuracy scores and mean squared errors average accross the seven iterations.
+
+? STATSMODEL ?
+
+Next a polynomial model was tried with degree two. This model explained almost none of the variance with an R sq value of very close to 0. The mean squared error also increased dramatically. The polynomial model does not seem to be a strong candidate for solving the problem.
+
+The next models involved some feature reduction based on the p values of the domains in the original linear model. This meant that first Education and Employment were removed and then Community Vitality and Participation. This resulted in a small improvement in the model fit but little improvement in the MSE. 
+
+With the median house price distribution suggesting a power law, a log transformation was performed on the data to try and linearise it with the linear regression model then re-run. This transformation dramatically increased the R sq value of the model, to 0.64, an increase of 0.25 from the equivalent model without the transformation. The model run on the log transformed data explains an additional 25 percent of the variance within the model. The exponent of the MSE is also a substantial reduction. This returned the following model:
+
+?[insert model equation]?
+
+As the best performing regression model this will be used for prediction in the final visulisation.
+
+When the predictions were given the inverse transformation and validated against the actual values, the majority of wards showed that this model had good predictive capability although there were a handful of wards where the prediction had a signifcant error margin. The wards with significant errors tended to be those which had a much higher or lower score in a particular domain as compared to the neighbouring areas.
+
+\includegraphics[scale=1]{figures/regression_results} % Regression results
+
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
@@ -68,13 +99,19 @@ When the predictions were given the inverse transformation and compared with the
 
 \section{London house prices as a classification problem}
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor
+The choropleth map below shows a different picture of London house prices being based on quintiles rather than monetary values, here the fifth quintile covers a larger range of values than the other quintiles due to the extremely expensive areas such as Knightsbridge and Belgravia where the median house price reaches over £2.8 million, 10 times as much as North End ward in Bexley.
 
 \includegraphics[scale=0.4]{figures/HPQuintile} % Choropleth of Median house prices by quintile
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor
+? BOXPLOT WITH QUINTILES ?
+
+For the classification problem the aim was to try to find a model that has both a good fit and high interpretability. However, models that often have high accuracy but low interpretability such as support vector machines and neural networks were also used to both discover and validate the best classification model for the problem.
 
 \includegraphics[scale=0.3]{figures/pairplot_quintile} % Pair-wise plot with median prices by quintile
+
+By using the pair-wise plot and colouring the points by quintile, it is clear that there is no clear separation of quintile for any of the indicators with a more gradual movement from first to fifth quintile for most domains. Environment and Saftey and Security have an almost inverse relationship with the quintiles. Because the majority of the high-priced wards are centrally located, this may relate to a lack of greenspace and higher polution centrally as well as providing high-value targets for crime. 
+
+? FINISH WRITING UP CLASSIFICATION MODELLING ?
 
 
 %----------------------------------------------------------------------------------------
@@ -83,10 +120,31 @@ Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat
 
 \section{Encoding as geoJSON}
 
+To use the information from the creation of the well-being domains and the predictions obtained from the models in a javascript based visualisation, the information needed to be converted from a pandas dataframe in Python to a geoJSON file in javascript. A geoJSON file is a variation on the JSON format as defined below:
 
+? GEOJSON DEFINITION ?
+
+Whilst a relatively straightforward task within the geopandas module in Python, geoJSON accepts coordinates in latitude and longditude and the shapefile being used has the coordinates defining the ward polygons in Ordnance Survey grid references. To change this to latitude and longditude required the creation of a function that would take each polygon in the ward geometry in the geo data frame and break this down into the individual points which define the polygon. Once separated into coordinate pairs, these pairs could be reprojected to be latitude and longditude. The function was then required to recombine all of the coordinate pairs into the correct polygon geometries.
+
+? CODE SNIPPET?
+
+The information was then in the required format to be exported to a geoJSON file.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 6
 %----------------------------------------------------------------------------------------
 
 \section{Interactive maps}
+
+For the production of the interactive map which serves as the user front end for this project, the information was moved from the Python environment via geoJSON and into javascript functions embedded into html. This decision was made on the basis of the additional functionality and interactivity that could be smoothly added to the map in javascript. With less experience of javascript as a programming language, the leaflet.js tutorial ?INSERT REFERENCE? was an excellent starting point.
+
+? SCREENSHOT OF MAP (not used in trailer) - MAYBE ZOOMED IN?
+
+The map has key functionality added. This includes a zoom facility and hovering over any of the 625 wards will display the median house price value and quintile, the scores for each of the six well-being domains and the predictions from both the regression and classification models.
+
+
+
+
+
+
+
