@@ -105,14 +105,33 @@ The choropleth map below shows a different picture of London house prices being 
 
 ? BOXPLOT WITH QUINTILES ?
 
-For the classification problem the aim was to try to find a model that has both a good fit and high interpretability. However, models that often have high accuracy but low interpretability such as support vector machines and neural networks were also used to both discover and validate the best classification model for the problem.
+For the classification problem the aim was to try to find a model that has both a good fit and high interpretability. However, models that often have high accuracy but low interpretability such as neural networks were also used to both discover and validate the best classification model for the problem.
 
 \includegraphics[scale=0.3]{figures/pairplot_quintile} % Pair-wise plot with median prices by quintile
 
 By using the pair-wise plot and colouring the points by quintile, it is clear that there is no clear separation of quintile for any of the indicators with a more gradual movement from first to fifth quintile for most domains. Environment and Saftey and Security have an almost inverse relationship with the quintiles. Because the majority of the high-priced wards are centrally located, this may relate to a lack of greenspace and higher polution centrally as well as providing high-value targets for crime. 
 
-? FINISH WRITING UP CLASSIFICATION MODELLING ?
+The first model investigated was a logistic regression model. With strong interpretability well-performing logistic regression model would provide a good solution to the problem.
+The model had a classification success rate of 44 percent, showing a reasonable level of predictive capability across a five value classification problem. The confusiion matrices provided by the seven cross-validation iterations show that model performs strongly in the first and fifth quintiles but finds it much more difficult to classify points in the second, third and fourth quintiles.
+From the pair-wise plots ? OR USE BOXPLOT? this is unsurprising as the range of median house prices is much smaller for the middle three quintiles and many of the well-being indicators are of similar magnitude.
 
+For the second model a k-nearest neighbours classifier was used, this achieved a 40 percent classification success rate and was outperformed by the logistic regression model.
+
+A model using a Gaussian Naive Bayes algorithm performed very slightly above the logistic regression, however, given the better interpretability of the logistic regression model, the 0.2 percent gain would not be enough to justify using this model for the solution.
+
+The next model investigated was a decision tree, with an average classification percentage of 38, this performed significantly below the rate of the logistic regression model.
+
+Although a single decision tree was the worst of the classifiers used so far, the next models investigated were ensemble models. A random forest was tried on the data. With 10 trees this performed below the level of the logistic regression model, but when tuned to use 100 trees, this produced the best classification score so far at just under 46 percent. The random forest was therefore a candidate to use as the classification model.
+Another ensemble method, gradient boosting, also performed better than the logistic regression model but was not able to match the random forest's correct classification rate.
+
+The final model used was a Neural Network using a single hidden layer. A process of tuning this model involved trying four activation functions, of which the logistic function performed best. Different values were used for the number of nodes in the hidden layer with 40 giving the highest classification rate.
+By using a tuned Neural Network, a 50 percent classification rate was achieved. This was a significant improvement on the other models used.
+
+To take advantage of both interpretability and classification success rates, it was decided to display the predicted quintile values for both the Logistic Regression model and the Neural Network in the final map visualisation. The model given for the Logistic Regression model was:
+
+The results of testing each of the different models using k-fold cross validation with k=7 were:
+
+\includegraphics[scale=1]{figures/classification_results} % Regression results
 
 %----------------------------------------------------------------------------------------
 %	SECTION 5
