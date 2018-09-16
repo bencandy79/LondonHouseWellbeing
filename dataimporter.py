@@ -16,7 +16,7 @@ def importHousePrices():
     except:
         print('Cannot open data file - London House Prices')
     df_HousePrices = pd.DataFrame(df_HousePricesAll.iloc[1:,:])
-    df_HousePrices.to_csv('files/HousePrices.csv',index=False)
+    df_HousePrices.to_csv('datastore/HousePrices.csv',index=False)
     return(df_HousePrices)
     
 def importEmploymentRates():
@@ -28,7 +28,7 @@ def importEmploymentRates():
     employment_columns = ['New Code','Economically active: % In employment.1']
     df_employment = pd.DataFrame(df_ward_atlas2, columns = employment_columns)
     df_employment.rename(columns={'New Code':'Ward_Code','Economically active: % In employment.1':'Employ_Rate'},inplace=True)
-    df_employment.to_csv('files/Employment.csv',index=False)
+    df_employment.to_csv('datastore/Employment.csv',index=False)
     return(df_employment)
     
 def importGCSE():
@@ -40,7 +40,7 @@ def importGCSE():
     GCSE_columns = ['New Code','2014.2']
     df_GCSE = pd.DataFrame(df_ward_atlas3, columns = GCSE_columns)
     df_GCSE.rename(columns={'New Code':'Ward_Code','2014.2':'Av_GCSE_Points'},inplace=True)
-    df_GCSE.to_csv('files/GCSE.csv',index=False)
+    df_GCSE.to_csv('datastore/GCSE.csv',index=False)
     return(df_GCSE)
     
 def importSchools():
@@ -59,7 +59,7 @@ def importSchools():
     df_schoolslondon.rename(columns={'OfstedRating (name)':'Ofsted_Rating'}, inplace=True)
     ofsted_ratings = {'Ofsted_Rating':{'Outstanding':2,'Good':1,'Requires improvement':-1,'Serious Weaknesses':-2,'Special Measures':-2,'Inadequate':-2}}
     df_schoolslondon.replace(ofsted_ratings,inplace=True)
-    df_schoolslondon.to_csv('files/Schools.csv',index=False)
+    df_schoolslondon.to_csv('datastore/Schools.csv',index=False)
     return(df_schoolslondon)
     
 def importCrime():
@@ -69,7 +69,7 @@ def importCrime():
     except:
         print('Cannot open data file - Crime by Ward')
     df_crime['2017'] = df_crime['201701']+df_crime['201702']+df_crime['201703']+df_crime['201704']+df_crime['201705']+df_crime['201706']+df_crime['201707']+df_crime['201708']+df_crime['201709']+df_crime['201710']+df_crime['201711']+df_crime['201712']
-    df_crime.to_csv('files/Crime.csv', index=False)
+    df_crime.to_csv('datastore/Crime.csv', index=False)
     return(df_crime)
     
 def importTraffic():
@@ -86,7 +86,7 @@ def importTraffic():
     df_traffic_fatalities.rename(columns={'Unnamed: 0':'Ward_Code','1 Fatal.9':'Fatal','2 Serious.9':'Serious','3 Slight.9':'Slight'}, inplace=True)
     df_traffic_fatalities2.rename(columns={'Ward Code':'Ward_Code','Fatal.4':'Fatal','Serious.4':'Serious','Slight.4':'Slight'}, inplace=True)
     df_traffic_fatalities = pd.concat([df_traffic_fatalities, df_traffic_fatalities2])
-    df_traffic_fatalities.to_csv('files\Traffic.csv', index=False)
+    df_traffic_fatalities.to_csv('datastore\Traffic.csv', index=False)
 
 def importEmissions():
     XLSX_WARD_ATLAS = 'https://files.datapress.com/london/dataset/ward-profiles-and-atlas/2015-09-24T14:48:35/ward-atlas-data.xls'
@@ -97,7 +97,7 @@ def importEmissions():
     emissions_columns = ['New Code','2011.4','2011.6']
     df_emissions = pd.DataFrame(df_ward_atlas5, columns = emissions_columns)
     df_emissions.rename(columns={'New Code':'Ward_Code','2011.4':'PM10','2011.6':'NO2'},inplace=True)
-    df_emissions.to_csv('files/Emissions.csv', index=False)
+    df_emissions.to_csv('datastore/Emissions.csv', index=False)
     return(df_emissions)
 
 def importGreenspace():
@@ -109,7 +109,7 @@ def importGreenspace():
     greenspace_columns = ['New Code','2014.4']
     df_greenspace = pd.DataFrame(df_ward_atlas5, columns = greenspace_columns)
     df_greenspace.rename(columns={'New Code':'Ward_Code','2014.4':'Greenspace%'},inplace=True)
-    df_greenspace.to_csv('files/Greenspace.csv', index=False)
+    df_greenspace.to_csv('datastore/Greenspace.csv', index=False)
 
 def importNature():
     CSV_NATURE_ACCESS = 'https://files.datapress.com/london/dataset/access-public-open-space-and-nature-ward/public-open-space-nature-ward_access-to-nature.csv'
@@ -120,7 +120,7 @@ def importNature():
     nature_columns = ['Ward','% homes with good access to nature']
     df_nature = pd.DataFrame(df_nature_access, columns = nature_columns)
     df_nature.rename(columns={'Ward':'Ward_Code', '% homes with good access to nature':'Nature_Access'},inplace=True)
-    df_nature.to_csv('files/Nature.csv', index=False)
+    df_nature.to_csv('datastore/Nature.csv', index=False)
    
 def importElection():
     XLSX_ELECTION = 'https://files.datapress.com/london/dataset/london-elections-results-2016-wards-boroughs-constituency/2016-05-27T10:46:12/gla-elections-votes-all-2016.xlsx'
@@ -132,7 +132,7 @@ def importElection():
     turnout_columns = ['Unnamed: 4','% Turnout']
     df_turnout = pd.DataFrame(df_turnout, columns = turnout_columns)
     df_turnout.rename(columns={'Unnamed: 4':'Ward_Code', '% Turnout':'Turnout'},inplace=True)
-    df_turnout.to_csv('files/ElectionTurnout.csv', index=False)
+    df_turnout.to_csv('datastore/ElectionTurnout.csv', index=False)
     return(df_turnout)
 
 def importVenue(category, filename):
@@ -153,7 +153,7 @@ def importVenue(category, filename):
                 category_id = '4d4b7105d754a06376d81259' # drink
             distance = 450
             requested_keys = ["categories","id","location","name"]
-            url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s" % (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
+            url = "https://api.foursquare.com/v2/venues/search?ll=%s,%s&intent=browse&radius=%s&categoryId=%s&limit=49&client_id=%s&client_secret=%s&v=%s"% (lat, long, distance, category_id, client_id, client_secret, time.strftime("%Y%m%d"))
             resp = requests.get(url)
             dataResp = resp.json()
             if dataResp["response"]['venues'] != []:
@@ -182,7 +182,7 @@ def importTransportAccess():
         print('Cannot open data file - Transport Access by Ward')
     transport_access_columns = ['Ward Code','AvPTAI2015']
     df_transport_access = pd.DataFrame(df_transport_access, columns = transport_access_columns)
-    df_transport_access.to_csv('files/TransportAccess.csv', index=False)
+    df_transport_access.to_csv('datastore/TransportAccess.csv', index=False)
     return(df_transport_access)
     
 def importJourneyTimes():
@@ -200,10 +200,10 @@ def importJourneyTimes():
     df_journeys = pd.DataFrame(df_journeys, columns = journey_columns)
     df_journeys['JourneyTime'] = (df_journeys['100EmpPTt'] + df_journeys['500EmpPTt'] + df_journeys['5000EmpPTt'])/3.0
     df_journeys = pd.merge(df_journeys, df_lsoa_ward, left_on='LSOA_code', right_on='LSOA11CD')
-    shapes = 'C:/Shapes/London_Ward.shp'
+    shapes = 'datastore/Shapes/London_Ward.shp'
     wards = gpd.read_file(shapes)
     df_journeys = pd.merge(wards, df_journeys, left_on='GSS_CODE', right_on='WD15CD')
-    df_journeys.to_csv('files/JourneyTimes.csv', index=False)
+    df_journeys.to_csv('datastore/JourneyTimes.csv', index=False)
     
     
 def importPopulationDensity():
@@ -215,7 +215,7 @@ def importPopulationDensity():
     df_density = df_pop_density[(df_pop_density['Year'] == 2017)]
     density_columns = ['Code','Population_per_square_kilometre']
     df_density = pd.DataFrame(df_density, columns = density_columns)
-    df_density.to_csv('files/PopDensity.csv', index=False)
+    df_density.to_csv('datastore/PopDensity.csv', index=False)
     return(df_pop_density)
     
 def importLifeExpectancy():
@@ -231,7 +231,7 @@ def importLifeExpectancy():
     df_life_ex['Life_Ex'] = (df_life_ex['Female'] + df_life_ex['Male'])/2
     del df_life_ex['Female']
     del df_life_ex['Male']
-    df_life_ex.to_csv('files/LifeExpectancy.csv', index=False)
+    df_life_ex.to_csv('datastore/LifeExpectancy.csv', index=False)
     return(df_life_ex)
     
 def importChildObesity():
@@ -252,7 +252,7 @@ def importChildObesity():
     df_childobesity['Obese%'].replace('s', df_childobesity['BoroughObese%'], inplace=True)
     ward_columns = ['Code_x', 'Obese%']
     df_childobesity = pd.DataFrame(df_childobesity, columns = ward_columns)
-    df_childobesity.to_csv('files/ChildObesity.csv', index=False)
+    df_childobesity.to_csv('datastore/ChildObesity.csv', index=False)
     return(df_childobesity)
     
 def importIllness():
@@ -261,16 +261,16 @@ def importIllness():
     try:
         df_illness = pd.read_excel(XLSX_ILLNESS, 'ID 2015 Health Domain')     
     except:
-        print('Cannot open data file - Childhood Obesity by Ward')
+        print('Cannot open data file - Illness by Ward')
     try:
         df_lsoa_ward = pd.read_csv(CSV_LSOA_MAPPING)
     except:
         print('Cannot open data file - LSOA to Ward Mapping')
     df_illness = pd.merge(df_illness, df_lsoa_ward, left_on='LSOA code (2011)', right_on='LSOA11CD')
-    shapes = 'C:/Shapes/London_Ward.shp'
+    shapes = 'datastore/Shapes/London_Ward.shp'
     wards = gpd.read_file(shapes)
     df_illness = pd.merge(wards, df_illness, left_on='GSS_CODE', right_on='WD15CD')
-    df_illness.to_csv('files/Illness.csv', index=False)
+    df_illness.to_csv('datastore/Illness.csv', index=False)
     return(df_illness)
 
    

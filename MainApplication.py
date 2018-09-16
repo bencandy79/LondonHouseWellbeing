@@ -64,7 +64,7 @@ def mapLatLongToWard(df):
     df['points'] = df.apply(lambda row: Point(transform(inProj, outProj, row['long'],row['lat'])), axis=1)
     del (df['lat'], df['long'])
     df = gpd.GeoDataFrame(df, geometry='points')
-    shapes = 'C:/Shapes/London_Ward.shp'
+    shapes = 'datastore/Shapes/London_Ward.shp'
     wards = gpd.GeoDataFrame.from_file(shapes)
     wards = wards[['GSS_CODE','geometry']]
     df = gpd.tools.sjoin(df, wards, how='left')
@@ -124,25 +124,24 @@ def geometricTransform(gdf):
 
 # output geoJSON to javascript file defining a js variable for interactive map
 def toGeoJSON(gdf):
-    new_gdf = geometricTransform(gdf)
-    json_file = new_gdf.to_json()
+    json_file = gdf.to_json()
     with open('dataset.js', 'w') as openfile:
         openfile.write('var dataset = ' + json_file + ';')
 
 # house prices
-df_HousePrices = pd.read_csv('files/HousePrices.csv')
+df_HousePrices = pd.read_csv('datastore/HousePrices.csv')
 df_HousePrices['quintile'] = pd.qcut(df_HousePrices['Year ending Dec 2017'],5,labels=False)
 df_HousePrices['thousands'] = df_HousePrices['Year ending Dec 2017']//1000
 house_price_columns = ['New code', 'Ward name', 'Borough name', 'Year ending Dec 2017', 'quintile','thousands']
 df_HousePrices = pd.DataFrame(df_HousePrices, columns = house_price_columns)
     
 # read shape file for ward polygons
-shapes = 'C:/Shapes/London_Ward.shp'
+shapes = 'datastore/Shapes/London_Ward.shp'
 map_df = gpd.read_file(shapes)
     
 # Domain One - Education and Employment
 # employment  
-df_employment = pd.read_csv('files/Employment.csv')
+df_employment = pd.read_csv('datastore/Employment.csv')
 df_employment.set_index('Ward_Code',inplace=True)
 df_employment = df_employment.drop(['K04000001'])
 df_employment = df_employment.drop(['E92000001'])
@@ -150,7 +149,7 @@ df_employment = df_employment.drop(['E12000007'])
 df_employment = standardise(df_employment)
 df_employment = old_to_new_wards(df_employment,'Employ_Rate')
 # average GCSE scores
-df_GCSE = pd.read_csv('files/GCSE.csv')
+df_GCSE = pd.read_csv('datastore/GCSE.csv')
 df_GCSE.set_index('Ward_Code',inplace=True)
 df_GCSE = df_GCSE.drop(['K04000001'])
 df_GCSE = df_GCSE.drop(['E92000001'])
@@ -158,7 +157,7 @@ df_GCSE = df_GCSE.drop(['E12000007'])
 df_GCSE = standardise(df_GCSE)
 df_GCSE = old_to_new_wards(df_GCSE,'Av_GCSE_Points')
 # average Ofsted rating for schools
-df_schoolslondonopen = pd.read_csv('files/Schools.csv')
+df_schoolslondonopen = pd.read_csv('datastore/Schools.csv')
 df_schoolsborough = df_schoolslondonopen.pivot_table(values='Ofsted_Rating', index='DistrictAdministrative (code)', fill_value=0)
 df_schools = df_schoolslondonopen.pivot_table(values='Ofsted_Rating', index='AdministrativeWard (code)', fill_value=0)
 df_schoolward = pd.merge(map_df, df_schools, left_on='GSS_CODE', right_index=True, how='outer')
@@ -174,12 +173,13 @@ df_eduemploy = pd.merge(df_employment,df_edu, left_index=True, right_index=True)
 # check covariance and correlation matrices
 df_eduemploy_cov = df_eduemploy.cov()
 df_eduemploy_corr = df_eduemploy.corr()
+df_eduemploy_corr.to_csv('datastore/eduemploycorr.csv')
 ## run principal component analysis to create domain score
 Education_Employment = domain_indicator_Mean(df_eduemploy,'Education_Employment')
 
 # Domain Two - Safety and Security
 # crime (against the person and locality crime)
-df_crime = pd.read_csv('files/Crime.csv')
+df_crime = pd.read_csv('datastore/Crime.csv')
 df_crime_pivot = df_crime.pivot_table(index='WardCode', columns='Major Category', values='2017',aggfunc='sum')
 person_columns = ['Robbery','Sexual Offences','Violence Against the Person']
 area_columns = ['Burglary','Criminal Damage','Drugs','Theft and Handling']
@@ -188,7 +188,7 @@ df_crimeperson = standardise(df_crimeperson)
 df_crimearea = pd.DataFrame(df_crime_pivot, columns = area_columns)
 df_crimearea = standardise(df_crimearea)
 # traffic danger
-df_traffic = pd.read_csv('files/Traffic.csv')
+df_traffic = pd.read_csv('datastore/Traffic.csv')
 df_traffic.set_index('Ward_Code',inplace=True)
 df_traffic = standardise(df_traffic)
 df_traffic['traffic_fatality_score'] = (df_traffic['Fatal'] + df_traffic['Serious'] + df_traffic['Slight'])/3
@@ -201,12 +201,13 @@ df_safetysecurity = pd.merge(df_crime,df_traffic, left_index=True, right_index=T
 # check covariance and correlation matrices
 df_safetysecurity_cov = df_safetysecurity.cov()
 df_safetysecurity_corr = df_safetysecurity.corr()
+df_safetysecurity_corr.to_csv('datastore/safetysecuritycorr.csv')
 # run principal component analysis to create domain score
 Safety_Security = 100-domain_indicator_PCA(df_safetysecurity,'Safety_Security')
 
 # Domain Three - Environment
 # emissions
-df_emissions = pd.read_csv('files/Emissions.csv')
+df_emissions = pd.read_csv('datastore/Emissions.csv')
 df_emissions.set_index('Ward_Code',inplace=True)
 df_emissions = df_emissions.drop(['K04000001'])
 df_emissions = df_emissions.drop(['E92000001'])
@@ -216,7 +217,7 @@ df_emissions['emission'] = (df_emissions['PM10'] + df_emissions['NO2'])/2
 df_emissions = pd.DataFrame(df_emissions['emission']*-1) # emissions negative so *-1
 df_emissions = old_to_new_wards(df_emissions,'emission')
 # greenspace
-df_greenspace = pd.read_csv('files/Greenspace.csv')
+df_greenspace = pd.read_csv('datastore/Greenspace.csv')
 df_greenspace.set_index('Ward_Code',inplace=True)
 df_greenspace = df_greenspace.drop(['K04000001'])
 df_greenspace = df_greenspace.drop(['E92000001'])
@@ -224,7 +225,7 @@ df_greenspace = df_greenspace.drop(['E12000007'])
 df_greenspace = standardise(df_greenspace)
 df_greenspace = old_to_new_wards(df_greenspace,'Greenspace%')
 # nature
-df_nature = pd.read_csv('files/Nature.csv')
+df_nature = pd.read_csv('datastore/Nature.csv')
 df_nature.set_index('Ward_Code',inplace=True)
 df_nature = standardise(df_nature)
 df_nature = old_to_new_wards(df_nature,'Nature_Access')
@@ -234,22 +235,23 @@ df_environment = pd.merge(df_green,df_emissions, left_index=True, right_index=Tr
 # check covariance and correlation matrices
 df_environment_cov = df_environment.cov()
 df_environment_corr = df_environment.corr()
+df_environment_corr.to_csv('datastore/environmentcorr.csv')
 # create domain indicator using arithmetic mean
 Environment = domain_indicator_Mean(df_environment,'Environment')
 
 # Domain Four - Community Vitality and Participation
 # election turnout
-df_turnout = pd.read_csv('files/ElectionTurnout.csv')
+df_turnout = pd.read_csv('datastore/ElectionTurnout.csv')
 df_turnout.set_index('Ward_Code', inplace=True)
 df_turnout = standardise(df_turnout)
 # access to cultural spaces
-cultural_venues = pd.read_csv('files/CulturalVenues.csv')
+cultural_venues = pd.read_csv('datastore/CulturalVenues.csv')
 cultural_locations = mapLatLongToWard(cultural_venues)
 df_culturepivot = cultural_locations.pivot_table(index='GSS_CODE', values='name',aggfunc='count')
 df_cultureaccess = standardise(df_culturepivot)
 # access to food and drink establishment
-bars = pd.read_csv('files/Bars.csv')
-restaurants = pd.read_csv('files/Restaurants.csv')
+bars = pd.read_csv('datastore/Bars.csv')
+restaurants = pd.read_csv('datastore/Restaurants.csv')
 food_drink_list = [bars, restaurants]
 bars_restaurants = pd.concat(food_drink_list)
 # specify co-ordinate reference systems
@@ -266,20 +268,21 @@ df_vitalityparticipation['Turnout'].fillna(0.0, inplace=True)
 # check covariance and correlation matrices
 df_vitalityparticipation_cov = df_vitalityparticipation.cov()
 df_vitalityparticipation_corr = df_vitalityparticipation.corr()
+df_vitalityparticipation_corr.to_csv('datastore/vitalityparticipationcorr.csv')
 # create domain indicator using arithmetic mean
 Vitality_Participation = domain_indicator_Mean(df_vitalityparticipation,'Vitality_Participation')
 
 # Domain Five - Infrastructure
 # access to public transportation
-df_pta = pd.read_csv('files/TransportAccess.csv')
+df_pta = pd.read_csv('datastore/TransportAccess.csv')
 df_pta.set_index('Ward Code',inplace=True)
 df_pta = standardise(df_pta)
 # average journey times
-df_journeys = pd.read_csv('files/JourneyTimes.csv')
+df_journeys = pd.read_csv('datastore/JourneyTimes.csv')
 df_journeypivot = df_journeys.pivot_table(index='GSS_CODE', values='JourneyTime')
 df_journeys = standardise(df_journeypivot)*-1
 # population density
-df_density = pd.read_csv('files/PopDensity.csv')
+df_density = pd.read_csv('datastore/PopDensity.csv')
 df_density.set_index('Code',inplace=True)
 df_density = standardise(df_density)*-1
 df_density = old_to_new_wards(df_density,'Population_per_square_kilometre')
@@ -289,21 +292,22 @@ df_infrastructure = pd.merge(df_transportation,df_density, left_index=True, righ
 # check covariance and correlation matrices
 df_infrastructure_cov = df_infrastructure.cov()
 df_infrastructure_corr = df_infrastructure.corr()
+df_infrastructure_corr.to_csv('datastore/infrastructurecorr.csv')
 # create domain indicator using PCA
 Infrastructure = domain_indicator_PCA(df_infrastructure,'Infrastructure')
 
 # Domain Six - Health
 # life expectancy
-df_expectancy = pd.read_csv('files/LifeExpectancy.csv')
+df_expectancy = pd.read_csv('datastore/LifeExpectancy.csv')
 df_expectancy.set_index('Ward_Code', inplace=True)
 df_expectancy = standardise(df_expectancy)
 df_expectancy = old_to_new_wards(df_expectancy,'Life_Ex')
 # childhood obesity
-df_obesity = pd.read_csv('files/ChildObesity.csv')
+df_obesity = pd.read_csv('datastore/ChildObesity.csv')
 df_obesity.set_index('Code_x', inplace=True)
 df_obesity = standardise(df_obesity)*-1
 # illness affecting work
-df_illness = pd.read_csv('files/Illness.csv')
+df_illness = pd.read_csv('datastore/Illness.csv')
 df_illnesspivot = df_illness.pivot_table(index='GSS_CODE',values='Comparative illness and disability ratio indicator')
 df_illness = standardise(df_illnesspivot)*-1
 # merge the 3 indicators to create the domain
@@ -312,6 +316,7 @@ df_health = pd.merge(df_prehealth,df_expectancy, left_index=True, right_index=Tr
 # check covariance and correlation matrices
 df_health_cov = df_health.cov()
 df_health_corr = df_health.corr()
+df_health_corr.to_csv('datastore/healthcorr.csv')
 # build domain indicator using PCA
 Health = domain_indicator_PCA(df_health,'Health')
 
@@ -328,7 +333,16 @@ DataSet = pd.merge(DataSet, pd.DataFrame(Infrastructure), left_on = 'New code', 
 DataSet.rename(columns={0:'Infrastructure'},inplace=True)
 DataSet = pd.merge(DataSet, pd.DataFrame(Health), left_on = 'New code', right_index = True)
 DataSet.rename(columns={0:'Health','Year ending Dec 2017':'Median_Price'},inplace=True)
-DataSet.to_csv('files/DataSet.csv', index=False)
+DataSet.to_csv('datastore/DataSet.csv', index=False)
 
-###
-#1dcb42e6633b78bf825f8a79fd05560deeed49c7  
+df_predictions = pd.read_csv('datastore/predictions.csv')
+
+df_datasetmapping = gpd.GeoDataFrame(pd.merge(map_df, df_predictions, left_on='GSS_CODE', right_on='New code'))
+
+df_datasetmapping.to_csv('datastore/datasetmapping.csv')
+
+df_js = geometricTransform(df_datasetmapping)
+
+toGeoJSON(df_js)
+
+ 
