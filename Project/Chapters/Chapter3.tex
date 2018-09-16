@@ -8,7 +8,59 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Flat files}
+\section{Datasets required to create the well-being indices}
+
+To create the well-being indices the decision was made to use six indices each made up of three indicator datasets. For the purpose of the project, each index and indicator will be of equal weighting.
+This approach is based upon other indices of well-being where data feeds into a set of between five and ten indices. 
+Three examples of this type of index would be the Gross National Happiness index (\cite{GNH}), the OECD Better Life Initiative (\cite{BLI}) and the Canadian Index of Wellbeing (\cite{CIW}). 
+The approach taken was to find three indicators that both represented each index and where the data could be retrieved or transformed to be analysed at ward level.
+
+\begin{table}[H]
+\caption{Indices and indicators used for the measurement of well-being for each London ward with data source and metric used}
+\scalebox{0.4}{
+\begin{tabular}{llll}
+\toprule
+Index                    & Indicators  & Source & Metric       \\
+\midrule
+\multirow{3}{*}{Education and Employment} & Average GCSE points & London datastore & Average GCSE capped point score \\
+                         & Average Ofsted rating of schools & edubase @ gov.uk & Average Ofsted ratings of schools - most recent inspections (September 2018) \\
+                         & Employment rates  & London datastore   & Rate of economically active individuals (2011)            \\
+\hline
+\multirow{3}{*}{Safety and Security}     & Crime rates - against the person  & London datastore & Number of recorded crimes (2017)\\
+                         & Crime rates - other crime    & London datastore  & Number of recorded crimes (2017) \\
+                         & Traffic injuries  & London datastore & Road collision numbers (2014) \\
+\hline
+\multirow{3}{*}{Environment}     & Air pollution & London datastore & Annual mean of Nitrogen Dioxide (NO2) and Particle emissions (PM10) (2011) \\
+                         & Amount of greenspace  & London datastore    & Percentage of ward area which is greenspace (2011)  \\
+                         & Access to nature & London datastore & Percentage of residential households with access to at least one open space (2011)\\
+\hline
+\multirow{3}{*}{Community Vitality and Participation} & Access to cultural space  & Foursquare & Number of cultural venues in ward (August 2018)\\
+                         & Amount of bars and restaurants   & Foursquare  & Number of bars and restaurants in ward (August 2018)\\
+                         & Election turnout & London datastore  & Percentage of residents voting in 2016 London election\\
+\hline
+\multirow{3}{*}{Infrastructure} & Access to public transport & London datastore & Transport for London Public Transport Accessibilty Levels (2015) \\
+                         & Average journey times   & gov.uk  & The mean percentage value of those within an hour's travel by public transport or walking of an area of 100, 500 and 500 jobs (2014)\\
+                         & Population density & London datastore & Persons per square km (2013)\\
+\hline
+\multirow{3}{*}{Health}  & Life expectancy & London datastore & Life expectancy at birth (2013) \\
+                         & Childhood obesity   & London datastore   & Prevalence of obese children at age 11 (2013)  \\
+                         & Illness preventing employment & gov.uk  &  Comparative illness and disability ratio from English Indices of Deprivation (2015)\\
+\bottomrule\\              
+\end{tabular}
+}
+\end{table}
+
+Access to open space definition \footnote{\url{https://data.london.gov.uk/dataset/access-public-open-space-and-nature-ward}}
+
+Access to public transport definition \footnote{\url{https://data.london.gov.uk/dataset/public-transport-accessibility-levels}}
+
+Illness preventing employment definition  \footnote{\url{https://www.gov.uk/government/statistics/english-indices-of-deprivation-2015}}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Static data files}
 
 The majority of data sets are either csv or Excel files which are accessed directly via a url by the data importer application. These sources are primarily from the websites of public bodies. The data importer application makes use of the pandas module within Python to support the importing and cleaning process within a series of dataframe objects.
 
@@ -17,36 +69,50 @@ The majority of data sets are either csv or Excel files which are accessed direc
 %-----------------------------------
 \subsection{London datastore}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+The Greater London Authority Datastore (\cite{GLA}) was the primary source of data for the project with significant amounts of data relating to various London metrics available. The fact that much of the data contained on the website was available at ward level was key in being able to piece together the indices.
+
 
 %-----------------------------------
 %	SUBSECTION 2
 %-----------------------------------
 
-\subsection{Transport for London}
-Morbi rutrum odio eget arcu adipiscing sodales. Aenean et purus a est pulvinar pellentesque. Cras in elit neque, quis varius elit. Phasellus fringilla, nibh eu tempus venenatis, dolor elit posuere quam, quis adipiscing urna leo nec orci. Sed nec nulla auctor odio aliquet consequat. Ut nec nulla in ante ullamcorper aliquam at sed dolor. Phasellus fermentum magna in augue gravida cursus. Cras sed pretium lorem. Pellentesque eget ornare odio. Proin accumsan, massa viverra cursus pharetra, ipsum nisi lobortis velit, a malesuada dolor lorem eu neque.
-
-%-----------------------------------
-%	SUBSECTION 3
-%-----------------------------------
-
 \subsection{gov.uk}
-Morbi rutrum odio eget arcu adipiscing sodales. Aenean et purus a est pulvinar pellentesque. Cras in elit neque, quis varius elit. Phasellus fringilla, nibh eu tempus venenatis, dolor elit posuere quam, quis adipiscing urna leo nec orci. Sed nec nulla auctor odio aliquet consequat. Ut nec nulla in ante ullamcorper aliquam at sed dolor. Phasellus fermentum magna in augue gravida cursus. Cras sed pretium lorem. Pellentesque eget ornare odio. Proin accumsan, massa viverra cursus pharetra, ipsum nisi lobortis velit, a malesuada dolor lorem eu neque.
+
+Used for Ofsted ratings for schools, average journey times and illness affecting employment, the gov.uk website contains a varied range of datasets. 
+Three key datasets used from this source are Edubase schools information for Ofsted ratings, 2014 Department for Transport journey time statistics and 2015 English Indices of deprivation.
+Without the London focus of the GLA datastore, information on gov.uk is often harder to locate and in many cases is at a higher level of aggregation than required with most information at borough or national level.
+
+%-----------------------------------
+%	SUBSECTION 4
+%-----------------------------------
+
+\subsection{esri}
+
+Data for average journey times and illness affecting employment was obtained at lower super output area, a lower level of aggregation than ward. The different geographical level use in the two datasets created the need for a mapping. The open data section of esri's ArcGIS website (\cite{ArcGIS}) offered this mapping document in csv format which could be incorporated into the data import software to allow an arithmetic mean to be determined at ward level.
+
 
 %----------------------------------------------------------------------------------------
-%	SECTION 2
+%	SECTION 3
 %----------------------------------------------------------------------------------------
 
 \section{APIs}
 
-A subset of London data is also available via various APIs. For transport information Transport for London have extensive APIs available, unfortunately none of these were able to provide any of the datasets required for the project. The use of APIs became focussed on collecting information on venues to obtain the data for the 'community vitality' and 'access to cultural spaces' datasets. For this data Foursquare was the primary candidate with venue information available with no cost implications. 
+A subset of London data is also available via various APIs. For transport information Transport for London have extensive APIs available, unfortunately none of these were able to provide any of the datasets required for the project, though other formats offered by TFL were used. The use of APIs became focussed on collecting information on venues to obtain the data for the 'community vitality' and 'access to cultural spaces' datasets. For this data Foursquare was the primary candidate with venue information available with no cost implications. 
 
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
+
 \subsection{Foursquare}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+Foursquare is a social media platform based on location intelligence. The platform has information on more than 105 million locations mapped worldwide and over 50 million users per month. (\cite{foursquare}). With the extensive database of venues with location information, Foursquare could be used to look at two of the indicators which feed into the Community Vitality and Participation index:
+\begin{itemize}
+\item Access to cultural spaces
+\item Popularity of bars and restaurants
+\end{itemize}
+To measure these two indicators, Foursquare's venue API can be used to return list of venues within a radius of a specific point provided in latitude and longditude.
+By using the three venue types, "culture", "food" and "nightlife", a list of venues fitting those types can be captured via the API. In the implementation phase, the list of venues containing the point location of the venues can be mapped to the relevant ward and numbers aggregated to give an indicator of volume with which to measure this category.
+
 
 %-----------------------------------
 %	SUBSECTION 2
@@ -61,7 +127,7 @@ The places API from Google Maps was queried and code written to extract venue da
 
 \section{Shape Files}
 
-For choropleth mapping, shape files are needed to visualise the polygon shapes which define adminstrative or political boundaries. Shape files usually consist of properties of the shape such as name and size along with a geometry feature which defines the boundaries of a given shape via the coordinates of their vertices. For this project, the relevant shapefile is key to creating the final interactive map and will also be use to visualise the data to support the model building process.  
+For choropleth mapping, shape files are needed to visualise the polygon shapes which define adminstrative or political boundaries. Shape files usually consist of properties of the shape such as name and size along with a geometry feature which defines the boundaries of a given shape via the coordinates of their vertices. For this project, the relevant shapefile is key to creating the final interactive map and will also be use to visualise the data and support the model building process.  
 
 %-----------------------------------
 %	SUBSECTION 1
@@ -74,10 +140,10 @@ The key shapefile for the project is taken from the London datastore and provide
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 
-\section{Data availability}
+\section{Data availability issues}
 
 In part thanks to the Greater London Authority’s Datastore, a wealth of information is available at London Ward level. Combining this with information from the Foursquare API and Department for Education schools data provided a significant body of information in which to model London as a multiple dataset.
-Data availability was such that datasets for each of the indicators feeding into the six domains were available and it was not necessary to use substitute indicators that differed significantly from those originally planned. 
+Data availability was such that datasets for each of the indicators feeding into the six indices were available and it was not necessary to use substitute indicators that differed significantly from those originally planned. 
 
 %-----------------------------------
 %	SUBSECTION 1

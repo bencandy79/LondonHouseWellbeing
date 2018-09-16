@@ -27,9 +27,16 @@ For ward level data, the Greater London Authority's datastore is a primary data 
 
 The API that was key to the success of the project was that of social media platform Foursquare. To represent community vitality, the aim was to create a measure for the restaurants and bars in each ward. Foursquare is a platform based around venue information so holds the information required for this measure. Foursquare also holds information on cultural venues. Therefore the measure of 'Access to Cultural Space' could also be obtained from this platform.
 To use the API to obtain venue information you are required to search for venues within a specified radius of a certain point, given in latitude and longditude. The challenge with Foursquare was the the API rate limits which limits each search to a maximum of 49 searches. There are also daily and monthly rate limits to stay within.
-To obtain results of all bars, restaurants and cultural venues accross Greater London with these limits an iterative algorithm had to be created which could travel accross London by latitude and longditude, taking in small enough areas so as to not exceed 49 results a time. To achieve this, I created a latitude and longditude bounding box around London and created a nested loop iteration of 50 points of latitude and 50 points of longditude. The areas created by this had some overlap so as not to have missing areas of the capital. With a counter to check if the search limit of 49 venues was exceeded, this search algorithm put the list of venues into a pandas dataframe and de-duplicated for where areas had ovelapped.
+To obtain results of all bars, restaurants and cultural venues accross Greater London with these limits an iterative algorithm had to be created which could travel accross London by latitude and longditude, taking in small enough areas so as to not exceed 49 results a time. This function can be seen in figure ~\ref{fig:pyimpfsq}. To achieve this, a latitude and longditude bounding box was created around London and a nested loop iteration of 50 points of latitude and 50 points of longditude was undertaken. The areas created by this had some overlap so as not to have missing areas of the capital. With a counter to check if the search limit of 49 venues was exceeded, this search algorithm put the list of venues into a pandas dataframe and de-duplicated for where areas had ovelapped.
 
-\includegraphics[scale=0.75]{figures/API_import} % Code example
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{figures/API_import}
+\decoRule
+\caption{Python function written to import data from Foursquare. This function iterates for latitude and longitude to traverse London and return venue information for one of three categories ("cultural", "food" or "nightlife) without exceeding daily API limits.}
+\label {fig:pyimpfsq}
+\end{figure}
 
 Because of the rate limits, running the algorithm for such a large area could only be done on a daily basis.
 
@@ -53,63 +60,71 @@ To create an interpretable and comparable score for each domain the resulting si
 %	SECTION 3
 %----------------------------------------------------------------------------------------
 
-\section{London house prices as a regression problem}
+\section{Building a regression model}
 
-London is known for having very high real estate values but we can see from the map below that there are specific wards, particularly in the western central area, where median house prices are significantly above the Greater London area as a whole.
-
-\includegraphics[scale=0.4]{figures/HPMedian} % Choropleth of median house prices
-
-The choropleth map would suggest a high number of wards fall at the lower end of the range of median house prices with a small number with significantly high prices. From the pairwise plot below, the shape of the histogram of median house prices by ward would suggest that a power law may best describe the distribution.
-
-? FIT POWERLAW TO MEDIAN HOUSE PRICES ?
-
-For the domain scores, the histograms show most of the six as being at least close to a normal distribution. This is less clear in the case of the Safety and Security and Community Vitality and Participation domains with Safety and Security showing a large number of high values and Community Vitality and Participation showing many low scores. This can be attributed to a small number of wards where crime is high and that wards in central London have much greater access to both cultural and social spaces as indicated on the maps below. In both cases, a power law may best describe these distributions.
-
-\includegraphics[scale=0.3]{figures/pairplot} % Pair-wise plot with median prices
-
-This is less clear in the case of the Safety and Security and Community Vitality and Participation domains with Safety and Security showing a large number of high values and Community Vitality and Participation showing many low scores. This can be attributed to a small number of wards where crime is high and that wards in central London have much greater access to both cultural and social spaces as indicated on the maps below. In both cases, a power law may best describe these distributions.
-
-Correlations
-
-?INSERT MAPS OF EACH DOMAIN?
-
-To begin the task of trying to model the median house prices from the well-being indicators, a simple multiple linear regression model was used with all six domains as predictors. The results show that this model explains less than half the variance with an R sq score of 0.39. There is enough to suggest that some form of linear model may provide a reasonable model of this problem.
+To begin the task of trying to model the median house prices from the well-being indicces, a simple multiple linear regression model was used with all six indices as predictors. The results show that this model explains less than half the variance with an R squared value of 0.39. There is enough to suggest that some form of linear model may provide a reasonable model of this problem.
 To validate the model K-fold cross validation was used with k=7 with accuracy scores and mean squared errors average accross the seven iterations.
 
-? STATSMODEL ?
+The summary statistics for a simple linear model would suggest some level of statistical significance for all of the indices with Community Vitality and Participation and Education and Employment less significant than the others. Infrastructure and Health are the most significant indices here and they are also the most influential on the model. Safety and Security is the only index where there is a negative impact on house prices in the model. 
+
+\begin{table}[H]
+\caption{Results for regression models on London median house prices}
+\centering
+\begin{tabular}{lllll}
+\toprule
+Predictor               & coef    & std err & t      & p     \\
+\midrule
+const                   & 46.9752 & 135.66  & 0.346  & 0.729 \\
+Education\_Employment   & 1.4541  & 0.759   & 1.915  & 0.056 \\
+Safety\_Security        & -4.5924 & 1.391   & -3.301 & 0.001 \\
+Environment             & 2.0667  & 0.712   & 2.902  & 0.004 \\
+Vitality\_Participation & 2.2165  & 1.227   & 1.807  & 0.071 \\
+Infrastructure          & 9.2899  & 0.769   & 12.075 & 0     \\
+Health                  & 6.2779  & 0.624   & 10.064 & 0  \\
+\bottomrule\\  
+\end{tabular}
+\end{table}
 
 Next a polynomial model was tried with degree two. This model explained almost none of the variance with an R sq value of very close to 0. The mean squared error also increased dramatically. The polynomial model does not seem to be a strong candidate for solving the problem.
 
-The next models involved some feature reduction based on the p values of the domains in the original linear model. This meant that first Education and Employment were removed and then Community Vitality and Participation. This resulted in a small improvement in the model fit but little improvement in the MSE. 
+The next models involved some feature reduction based on the p values of the indices in the original linear model. This meant that first Education and Employment were removed and then Community Vitality and Participation. This resulted in a small improvement in the model fit but little improvement in the MSE. 
 
 With the median house price distribution suggesting a power law, a log transformation was performed on the data to try and linearise it with the linear regression model then re-run. This transformation dramatically increased the R sq value of the model, to 0.64, an increase of 0.25 from the equivalent model without the transformation. The model run on the log transformed data explains an additional 25 percent of the variance within the model. The exponent of the MSE is also a substantial reduction. This returned the following model:
 
-?[insert model equation]?
+\begin{equation}
+\resizebox{.8\hsize}{!}{$log(Median_Price) = 0.00300393*I1 + 0.00201057*I2 + 0.00191012*I3 +0.0081844*I4 + 0.01301158*I5 + 0.00742296*I6$}
+\end{equation}
+
+where I1 = Education and Employment, I2 = Safety and Security, I3 = Environment, I4 = Community Vitality and Participation, I5 = Infrastructure and I6 = Health
+
+The equation shows that Infrastructure has the largest impact on the median house prices in the model followed by Community Vitality and Participation and then Health. All indices have a positive impact on median house prices in the model, Environment is the least influential index
 
 As the best performing regression model this will be used for prediction in the final visulisation.
 
 When the predictions were given the inverse transformation and validated against the actual values, the majority of wards showed that this model had good predictive capability although there were a handful of wards where the prediction had a signifcant error margin. The wards with significant errors tended to be those which had a much higher or lower score in a particular domain as compared to the neighbouring areas.
 
-\includegraphics[scale=1]{figures/regression_results} % Regression results
+\begin{table}
+\caption{Results for regression models on London median house prices}
+\centering
+\begin{tabular}{l l l}
+\toprule
+Model & R squared & Average MSE \\
+\midrule
+Linear regression & 0.396 & 35326.75\\
+Linear regression with  polynomial degree 2 & 0.007 & 59013.81\\
+Linear regression with 5 dimensions & 0.473 & 33907.16\\
+Linear regression with 4 dimensions & 0.443 & 34608.08\\
+Linear regression on log-transformed data & 0.641 & 4944.06\\
+\bottomrule\\
+\end{tabular}
+\end{table}
 
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 
-\section{London house prices as a classification problem}
-
-The choropleth map below shows a different picture of London house prices being based on quintiles rather than monetary values, here the fifth quintile covers a larger range of values than the other quintiles due to the extremely expensive areas such as Knightsbridge and Belgravia where the median house price reaches over £2.8 million, 10 times as much as North End ward in Bexley.
-
-\includegraphics[scale=0.4]{figures/HPQuintile} % Choropleth of Median house prices by quintile
-
-? BOXPLOT WITH QUINTILES ?
-
-For the classification problem the aim was to try to find a model that has both a good fit and high interpretability. However, models that often have high accuracy but low interpretability such as neural networks were also used to both discover and validate the best classification model for the problem.
-
-\includegraphics[scale=0.3]{figures/pairplot_quintile} % Pair-wise plot with median prices by quintile
-
-By using the pair-wise plot and colouring the points by quintile, it is clear that there is no clear separation of quintile for any of the indicators with a more gradual movement from first to fifth quintile for most domains. Environment and Saftey and Security have an almost inverse relationship with the quintiles. Because the majority of the high-priced wards are centrally located, this may relate to a lack of greenspace and higher polution centrally as well as providing high-value targets for crime. 
+\section{Building the best classifier}
 
 The first model investigated was a logistic regression model. With strong interpretability well-performing logistic regression model would provide a good solution to the problem.
 The model had a classification success rate of 44 percent, showing a reasonable level of predictive capability across a five value classification problem. The confusiion matrices provided by the seven cross-validation iterations show that model performs strongly in the first and fifth quintiles but finds it much more difficult to classify points in the second, third and fourth quintiles.
@@ -124,14 +139,75 @@ The next model investigated was a decision tree, with an average classification 
 Although a single decision tree was the worst of the classifiers used so far, the next models investigated were ensemble models. A random forest was tried on the data. With 10 trees this performed below the level of the logistic regression model, but when tuned to use 100 trees, this produced the best classification score so far at just under 46 percent. The random forest was therefore a candidate to use as the classification model.
 Another ensemble method, gradient boosting, also performed better than the logistic regression model but was not able to match the random forest's correct classification rate.
 
-The final model used was a Neural Network using a single hidden layer. A process of tuning this model involved trying four activation functions, of which the logistic function performed best. Different values were used for the number of nodes in the hidden layer with 40 giving the highest classification rate.
+The final model used was a Neural Network using a single hidden layer. A process of tuning this model involved trying four activation functions, of which the logistic function performed best. Different values were used for the number of nodes in the hidden layer with 45 giving the highest classification rate.
 By using a tuned Neural Network, a 50 percent classification rate was achieved. This was a significant improvement on the other models used.
 
-To take advantage of both interpretability and classification success rates, it was decided to display the predicted quintile values for both the Logistic Regression model and the Neural Network in the final map visualisation. The model given for the Logistic Regression model was:
+\begin{table}[]
+\caption{Results for Neural Network classifier with Logistic activation function and different numbers of nodes in the hidden layer. Based on average scores using k-fold cross validation with k=7.}
+\centering
+\begin{tabular}{ll}
+\toprule
+Number of nodes in hidden layer & Test Score \\
+\midrule
+5                               & 0.469      \\
+10                              & 0.477      \\
+15                              & 0.474      \\
+20                              & 0.490      \\
+25                              & 0.458      \\
+30                              & 0.471      \\
+35                              & 0.482      \\
+40                              & 0.451      \\
+45                              & 0.502      \\
+50                              & 0.488      \\
+55                              & 0.498      \\
+60                              & 0.496      \\
+65                              & 0.483      \\
+70                              & 0.501      \\
+75                              & 0.482      \\
+80                              & 0.480      \\
+85                              & 0.456      \\
+90                              & 0.490      \\
+95                              & 0.471      \\
+100                             & 0.490     \\
+\bottomrule\\
+\end{tabular}
+\end{table}
 
+\begin{table}[]
+\caption{Results for Neural Network classifier with 45 nodes in the hidden layer and different activation functions. Based on average scores using k-fold cross validation with k=7.}
+\centering
+\begin{tabular}{ll}
+\toprule
+Activation Function & Test Score \\
+\midrule
+identity            & 0.380 \\
+logistic            & 0.485 \\
+tanh                & 0.445 \\
+relu                & 0.446    \\
+\bottomrule\\
+\end{tabular}
+\end{table}
+
+
+To take advantage of both interpretability and classification success rates, it was decided to display the predicted quintile values for both the Logistic Regression model and the Neural Network in the final map visualisation. 
 The results of testing each of the different models using k-fold cross validation with k=7 were:
 
-\includegraphics[scale=1]{figures/classification_results} % Regression results
+\begin{table}
+\caption{Results for classification models on the quintiles of London median house prices}
+\centering
+\begin{tabular}{lll}
+\toprule
+Model Type           & Training Score & Test Score \\
+\midrule
+Logistic Regression  & 0.470          & 0.440      \\
+Decision Tree        & 1.000          & 0.388      \\
+K-Nearest Neighbours & 0.614          & 0.407      \\
+Random Forest        & 1.000          & 0.459      \\
+Gradient Boosting    & 0.987          & 0.448      \\
+Naive Bayes          & 0.465          & 0.442   \\  
+\bottomrule\\
+\end{tabular}
+\end{table}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 5
@@ -141,7 +217,12 @@ The results of testing each of the different models using k-fold cross validatio
 
 To use the information from the creation of the well-being domains and the predictions obtained from the models in a javascript based visualisation, the information needed to be converted from a pandas dataframe in Python to a geoJSON file in javascript. A geoJSON file is a variation on the JSON format as defined below:
 
-? GEOJSON DEFINITION ?
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{figures/geoJSON}
+\decoRule
+\caption{geoJSON specification showing Point, LineString and Polygon geometry objects.}
+\end{figure}
 
 Whilst a relatively straightforward task within the geopandas module in Python, geoJSON accepts coordinates in latitude and longditude and the shapefile being used has the coordinates defining the ward polygons in Ordnance Survey grid references. To change this to latitude and longditude required the creation of a function that would take each polygon in the ward geometry in the geo data frame and break this down into the individual points which define the polygon. Once separated into coordinate pairs, these pairs could be reprojected to be latitude and longditude. The function was then required to recombine all of the coordinate pairs into the correct polygon geometries.
 
@@ -155,9 +236,7 @@ The information was then in the required format to be exported to a geoJSON file
 
 \section{Interactive maps}
 
-For the production of the interactive map which serves as the user front end for this project, the information was moved from the Python environment via geoJSON and into javascript functions embedded into html. This decision was made on the basis of the additional functionality and interactivity that could be smoothly added to the map in javascript. With less experience of javascript as a programming language, the leaflet.js tutorial ?INSERT REFERENCE? was an excellent starting point.
-
-? SCREENSHOT OF MAP (not used in trailer) - MAYBE ZOOMED IN?
+For the production of the interactive map which serves as the user front end for this project, the information was moved from the Python environment via geoJSON and into javascript functions embedded into html. This decision was made on the basis of the additional functionality and interactivity that could be smoothly added to the map in javascript. With less experience of javascript as a programming language, the leaflet.js tutorial (\cite{leaflet}) was an excellent starting point.
 
 The map has key functionality added. This includes a zoom facility and hovering over any of the 625 wards will display the median house price value and quintile, the scores for each of the six well-being domains and the predictions from both the regression and classification models.
 
